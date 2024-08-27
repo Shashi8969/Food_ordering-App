@@ -2,8 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="text_color">#1FC574</color>
+    <color name="text_color">#53E88B</color>
     <color name="iconColor">#2196F3</color>
-    <color name="endColor">#4CAF50</color>
-    <color name="startColor">#9C27B0</color>
+    <color name="endColor">#15BE77</color>
+    <color name="startColor">#53E88B</color>
 </resources>
