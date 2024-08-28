@@ -7,21 +7,23 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.foodordring.databinding.ActivityStartBinding
 
 class StartActivity : AppCompatActivity() {
+    private val binding: ActivityStartBinding by lazy{
+        ActivityStartBinding.inflate(layoutInflater)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_start)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val btn_next = findViewById(R.id.btn_next) as Button
-// set on-click listener
-        btn_next.setOnClickListener {
+        binding.btnNext.setOnClickListener {
             val i = Intent(this, Login::class.java);
             startActivity(i);
         }
