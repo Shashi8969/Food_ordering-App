@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.foodordring.R
+import com.example.foodordring.adaptar.PopularAdapter
 import com.example.foodordring.databinding.FragmentHomeBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -72,6 +74,13 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), itemMessage, Toast.LENGTH_SHORT).show()
             }
         })
+        val item = listOf("Pizza","Burgers","sandwich","momo")
+        val Price = listOf("$5","$6","$7","$8")
+        val populerFoodImages = listOf(R.drawable.menu1,R.drawable.menu2,R.drawable.menu3,R.drawable.menu4)
+        val adapter = PopularAdapter(item,populerFoodImages,Price)
+        binding.popularRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.popularRecyclerView.adapter = adapter
+
     }
 
     companion object {
