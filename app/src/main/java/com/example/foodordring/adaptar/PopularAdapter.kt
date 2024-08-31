@@ -20,10 +20,10 @@ class PopularAdapter(private val items:List<String>,private val image:List<Int>,
         return items.size
     }
     class PopularViewHolder (private val binding: PopularItemBinding) : RecyclerView.ViewHolder(binding.root)   {
-        val images = binding.imageView5
+        val images = binding.popularImage
         fun bind(item: String, images: Int, price: String) {
-            binding.foodNamePopular.text = item
-            binding.imageView5.setImageResource(images)
+            binding.popularFoodName.text = item
+            binding.popularImage.setImageResource(images)
             binding.pricePopular.text = price
         }
     }
