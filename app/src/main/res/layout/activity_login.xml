@@ -11,7 +11,7 @@
         android:id="@+id/imageView3"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,9 +59,11 @@
 
     <EditText
         android:id="@+id/et_email"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="30dp"
         android:autofillHints="emailAddress"
         android:background="@drawable/edittextshape"
         android:drawableLeft="@drawable/mail"
@@ -78,9 +80,11 @@
 
     <EditText
         android:id="@+id/et_password"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
         android:autofillHints="password"
         android:background="@drawable/edittextshape"
         android:drawableLeft="@drawable/lock"
@@ -91,7 +95,7 @@
         android:hint="@string/password_hint"
         android:inputType="textPassword"
         android:paddingLeft="15dp"
-        android:paddingRight="5dp"
+        android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="@+id/et_email"
         app:layout_constraintStart_toStartOf="@+id/et_email"
         app:layout_constraintTop_toBottomOf="@+id/et_email" />
@@ -100,11 +104,11 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/yeonsung_regular"
         android:text="Or"
         app:layout_constraintEnd_toEndOf="@+id/et_password"
-        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toStartOf="@+id/et_password"
         app:layout_constraintTop_toBottomOf="@+id/et_password" />
 
@@ -150,7 +154,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_create"
+        android:id="@+id/Login_button"
         android:layout_width="152dp"
         android:layout_height="57dp"
         android:layout_marginTop="16dp"
@@ -173,9 +177,9 @@
         android:text="Don’t Have Account?"
         android:textColor="@color/text_color"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/btn_create"
-        app:layout_constraintStart_toStartOf="@+id/btn_create"
-        app:layout_constraintTop_toBottomOf="@+id/btn_create" />
+        app:layout_constraintEnd_toEndOf="@+id/Login_button"
+        app:layout_constraintStart_toStartOf="@+id/Login_button"
+        app:layout_constraintTop_toBottomOf="@+id/Login_button" />
 
     <TextView
         android:id="@+id/textView11"

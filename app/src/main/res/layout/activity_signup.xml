@@ -9,7 +9,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_create"
-        android:layout_width="152dp"
+        android:layout_width="140dp"
         android:layout_height="57dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/greenbuttongradient"
@@ -24,7 +24,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btng_signup"
-        android:layout_width="152dp"
+        android:layout_width="140dp"
         android:layout_height="57dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/whitebutton"
@@ -39,7 +39,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnf_signup"
-        android:layout_width="152dp"
+        android:layout_width="140dp"
         android:layout_height="57dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/whitebutton"
@@ -56,7 +56,7 @@
         android:id="@+id/imageView3"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/yeonsung_regular"
         android:text="@string/app_name"
-        android:textSize="40sp"
+        android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
@@ -104,9 +104,11 @@
 
     <EditText
         android:id="@+id/et_name"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
         android:autofillHints="name"
         android:background="@drawable/edittextshape"
         android:drawableLeft="@drawable/user_plus"
@@ -120,11 +122,14 @@
         app:layout_constraintHorizontal_bias="0.432"
         app:layout_constraintStart_toStartOf="@+id/txt_signup"
         app:layout_constraintTop_toBottomOf="@+id/txt_signup" />
+
     <EditText
         android:id="@+id/et_email_signup"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
         android:autofillHints="emailAddress"
         android:background="@drawable/edittextshape"
         android:drawableLeft="@drawable/mail"
@@ -141,9 +146,11 @@
 
     <EditText
         android:id="@+id/et_password_Signup"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
         android:autofillHints="password"
         android:background="@drawable/edittextshape"
         android:drawableLeft="@drawable/lock"
@@ -174,10 +181,11 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/yeonsung_regular"
         android:text="Or"
         app:layout_constraintEnd_toEndOf="@+id/et_password_Signup"
+        app:layout_constraintHorizontal_bias="0.438"
         app:layout_constraintStart_toStartOf="@+id/et_password_Signup"
         app:layout_constraintTop_toBottomOf="@+id/et_password_Signup" />
 
@@ -193,5 +201,11 @@
         app:layout_constraintEnd_toEndOf="@+id/btn_create"
         app:layout_constraintStart_toStartOf="@+id/btn_create"
         app:layout_constraintTop_toBottomOf="@+id/btn_create" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="textView9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
