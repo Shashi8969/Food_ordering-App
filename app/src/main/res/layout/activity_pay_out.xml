@@ -211,6 +211,7 @@ for previewing layouts and visual "
         </LinearLayout>
         </LinearLayout>
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/placeorderbutton"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:textColor="@color/text_color"

@@ -1,13 +1,21 @@
 package com.example.foodordring
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-class CongratsBottomSheet : Fragment() {
+import com.example.foodordring.databinding.FragmentCongratsBottomSheetBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+
+class CongratsBottomSheet : BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentCongratsBottomSheetBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -15,7 +23,12 @@ class CongratsBottomSheet : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_congrats_bottom_sheet, container, false)
+        binding = FragmentCongratsBottomSheetBinding.inflate(layoutInflater,container,false)
+        binding.gohomebutton.setOnClickListener {
+            val intent = Intent(requireContext(),MainActivity::class.java)
+            startActivity(intent)
+        }
+        return binding.root
     }
 
 }
