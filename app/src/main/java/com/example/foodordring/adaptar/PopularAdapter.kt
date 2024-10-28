@@ -1,7 +1,6 @@
 package com.example.foodordring.adaptar
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foodordring.databinding.PopularItemBinding
@@ -26,5 +25,6 @@ class PopularAdapter(private val items:List<String>,private val image:List<Int>,
             binding.popularImage.setImageResource(images)
             binding.pricePopular.text = price
         }
+
     }
 }
