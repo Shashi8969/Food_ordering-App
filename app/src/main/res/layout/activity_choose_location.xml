@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ChooseLocation">
 
     <TextView
@@ -43,7 +44,6 @@
         app:endIconDrawable="@drawable/arrow_down"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
-
         app:endIconTint="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/textView10" >
         <AutoCompleteTextView

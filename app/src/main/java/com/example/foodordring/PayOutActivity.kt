@@ -14,5 +14,8 @@ class PayOutActivity : AppCompatActivity() {
         binding.placeorderbutton.setOnClickListener {
             bottomSheetFragment.show(supportFragmentManager, "Test")
         }
+        binding.backbtn.setOnClickListener {
+            finish()
+        }
     }
 }

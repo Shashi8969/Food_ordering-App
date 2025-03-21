@@ -1,11 +1,11 @@
 package com.example.foodordring.Fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
         val item = listOf("Pizza","Burgers","sandwich","momo")
         val Price = listOf("$5","$6","$7","$8")
         val populerFoodImages = listOf(R.drawable.menu1,R.drawable.menu2,R.drawable.menu3,R.drawable.menu4)
-        val adapter = PopularAdapter(item,populerFoodImages,Price)
+        val adapter = PopularAdapter(item,populerFoodImages,Price,requireContext())
         binding.popularRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.popularRecyclerView.adapter = adapter
 

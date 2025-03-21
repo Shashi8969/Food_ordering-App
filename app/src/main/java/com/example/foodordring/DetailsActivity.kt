@@ -12,11 +12,16 @@ class DetailsActivity : AppCompatActivity() {
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         val foodName = intent.getStringExtra("MenuItemName")
         val foodImage = intent.getIntExtra("MenuItemImage",0)
 
         binding.detailsFoodName.text = foodName
         binding.DetailFoodImage.setImageResource(foodImage)
+
+        binding.imageButton.setOnClickListener {
+            finish()
+        }
 
     }
 }
