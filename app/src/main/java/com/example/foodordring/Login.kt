@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.foodordring.databinding.ActivityLoginBinding
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -14,6 +15,7 @@ class Login : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityLoginBinding // Assuming you're using View Binding
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,25 +30,29 @@ class Login : AppCompatActivity() {
         auth = Firebase.auth
 
         binding.LoginButton.setOnClickListener {
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
-
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success")
-                        val user = auth.currentUser
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish() // Optional: Finish the LoginActivity
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                }
+            loginWithEmailAndPassword()
         }
+    }
+
+    private fun loginWithEmailAndPassword() {
+        val email = binding.etEmail.text.toString()
+        val password = binding.etPassword.text.toString()
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithEmail:success")
+                    val user = auth.currentUser
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish() // Optional: Finish the LoginActivity
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithEmail:failure", task.exception)
+                    Toast.makeText(baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     companion object {

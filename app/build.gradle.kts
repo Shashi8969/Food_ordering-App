@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.foodordring"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.foodordring"
@@ -40,19 +40,39 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0")) // Use the latest version
+
+    // Firebase Authentication KTX
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firebase Database KTX
+    implementation("com.google.firebase:firebase-database-ktx")
+
+    // Google Play Services Auth (for Google Sign-In)
+    implementation("com.google.android.gms:play-services-auth:21.1.0") // Use the latest version
+
+    // AndroidX dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.database.ktx)
-    implementation(libs.firebase.storage)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.navigation.ui.ktx)
+    //implementation(libs.firebase.auth) // This line is redundant, as it's already included in the Firebase BoM
+
+    // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
 }
