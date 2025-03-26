@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/detailsFoodName">
 
         <ImageView
-            android:id="@+id/DetailFoodImage"
+            android:id="@+id/detailFoodImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
@@ -66,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView4" />
 
     <TextView
-        android:id="@+id/descriptionTextView"
+        android:id="@+id/detailsDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -85,13 +85,13 @@
         android:text="Ingredients"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/descriptionTextView"
+        app:layout_constraintEnd_toEndOf="@+id/detailsDescription"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/descriptionTextView"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+        app:layout_constraintStart_toStartOf="@+id/detailsDescription"
+        app:layout_constraintTop_toBottomOf="@+id/detailsDescription" />
 
     <TextView
-        android:id="@+id/IngregientTextview"
+        android:id="@+id/detailsIngredients"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -116,5 +116,5 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IngregientTextview" />
+        app:layout_constraintTop_toBottomOf="@+id/detailsIngredients" />
 </androidx.constraintlayout.widget.ConstraintLayout>

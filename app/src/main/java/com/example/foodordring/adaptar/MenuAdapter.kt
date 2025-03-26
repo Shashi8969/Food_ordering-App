@@ -49,7 +49,7 @@ class MenuAdapter(
                 putExtra("MenuItemImage", menuItem.foodImage)
                 putExtra("MenuItemPrice", menuItem.foodPrice)
                 putExtra("MenuItemDescription", menuItem.foodDescription)
-                putExtra("MenuItemIngredient", menuItem.foodIngredient)
+                putExtra("MenuItemIngredient", menuItem.foodIngredients)
             }
             //start the activity
             requrireContext.startActivity(intent)
