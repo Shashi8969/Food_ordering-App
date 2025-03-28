@@ -20,11 +20,11 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/btnf_signup"
-        app:layout_constraintStart_toStartOf="@+id/btng_signup"
-        app:layout_constraintTop_toBottomOf="@+id/btng_signup" />
+        app:layout_constraintStart_toStartOf="@+id/googleButton"
+        app:layout_constraintTop_toBottomOf="@+id/googleButton" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btng_signup"
+        android:id="@+id/googleButton"
         android:layout_width="140dp"
         android:layout_height="57dp"
         android:layout_marginTop="16dp"
@@ -50,7 +50,7 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btng_signup"
+        app:layout_constraintStart_toEndOf="@+id/googleButton"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <ImageView
@@ -155,7 +155,7 @@
         android:autofillHints="password"
         android:background="@drawable/edittextshape"
         android:drawableLeft="@drawable/lock"
-        android:drawableRight="@drawable/eye"
+        android:drawableRight="@drawable/eye_hide"
         android:drawablePadding="15dp"
         android:elevation="5dp"
         android:ems="10"
