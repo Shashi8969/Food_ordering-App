@@ -38,7 +38,7 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/profile_name"
+                android:id="@+id/profileName"
                 android:layout_width="wrap_content"
                 android:layout_height="46dp"
                 android:layout_weight="1"
@@ -73,7 +73,7 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/profile_address"
+                android:id="@+id/profileAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -114,7 +114,7 @@ for previewing layouts and visual "
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/profile_email"
+                android:id="@+id/profileEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="46dp"
                 android:layout_weight="1"
@@ -150,7 +150,7 @@ for previewing layouts and visual "
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/profile_phone"
+                android:id="@+id/profilePhoneNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -165,18 +165,32 @@ for previewing layouts and visual "
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button2"
-        android:elevation="5dp"
-        android:background="@drawable/proceedbutonshape"
-        android:layout_width="match_parent"
+        android:id="@+id/saveInfo"
+        android:layout_width="142dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textAllCaps="true"
-        android:layout_marginBottom="32dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/proceedbutonshape"
+        android:elevation="5dp"
         android:fontFamily="@font/yeonsung_regular"
-        android:textColor="@color/text_color"
-        android:text="Save Infoermation" />
+        android:text="Save Infoermation"
+        android:textAllCaps="true"
+        android:textColor="@color/text_color" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/logoutButton"
+        android:layout_width="142dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/proceedbutonshape"
+        android:elevation="5dp"
+        android:fontFamily="@font/yeonsung_regular"
+        android:text="Logout"
+        android:textAllCaps="true"
+        android:textColor="@color/text_color" />
 
 </FrameLayout>
