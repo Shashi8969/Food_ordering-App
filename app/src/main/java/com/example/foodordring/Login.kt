@@ -2,9 +2,13 @@ package com.example.foodordring
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
+import android.view.MotionEvent
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.foodordring.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.Firebase
@@ -15,12 +19,16 @@ class Login : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityLoginBinding // Assuming you're using View Binding
+    private var isPasswordVisible = false
     private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Set up password visibility toggle
+        setupPasswordVisibilityToggle(binding.etPassword)
 
         binding.txtCreate.setOnClickListener {
             val intent = Intent(this, Signup::class.java)
@@ -68,5 +76,38 @@ class Login : AppCompatActivity() {
             finish() // Finish LoginActivity to prevent going back
         }
         // ... (Your existing login button click listener, if needed) ...
+    }
+    private fun setupPasswordVisibilityToggle(passwordEditText: EditText) {
+        passwordEditText.setOnTouchListener { _, event ->
+            val drawableRight = 2
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= (passwordEditText.right - passwordEditText.compoundDrawables[drawableRight].bounds.width())) {
+                    isPasswordVisible = !isPasswordVisible
+                    val selection = passwordEditText.selectionEnd
+                    if (isPasswordVisible) {
+                        passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            ContextCompat.getDrawable(this, R.drawable.lock),
+                            null,
+                            ContextCompat.getDrawable(this, R.drawable.eye),
+                            null
+                        )
+                        passwordEditText.inputType =
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    } else {
+                        passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            ContextCompat.getDrawable(this, R.drawable.lock),
+                            null,
+                            ContextCompat.getDrawable(this, R.drawable.eye_hide),
+                            null
+                        )
+                        passwordEditText.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    }
+                    passwordEditText.setSelection(selection)
+                    return@setOnTouchListener true
+                }
+            }
+            return@setOnTouchListener false
+        }
     }
 }
