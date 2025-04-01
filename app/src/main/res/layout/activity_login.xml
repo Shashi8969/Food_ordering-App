@@ -88,7 +88,7 @@
         android:autofillHints="password"
         android:background="@drawable/edittextshape"
         android:drawableLeft="@drawable/lock"
-        android:drawableRight="@drawable/eye"
+        android:drawableRight="@drawable/eye_hide"
         android:drawablePadding="15dp"
         android:elevation="5dp"
         android:ems="10"
