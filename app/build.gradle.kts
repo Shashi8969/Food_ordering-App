@@ -50,6 +50,14 @@ dependencies {
 
     // Google Play Services Auth (for Google Sign-In)
     implementation("com.google.android.gms:play-services-auth:21.1.0") // Use the latest version
+    // ... other dependencies ...
+    implementation("androidx.compose.ui:ui:1.6.8") // Or the latest version
+    implementation("androidx.compose.material:material:1.6.8") // Or the latest version
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.8") // Or the latest version
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8") // Or the latest version
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.8") // Or the latest version
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8") // Or the latest version
+    implementation("androidx.activity:activity-compose:1.9.0") // Or the latest version
 
     // AndroidX dependencies
     implementation(libs.androidx.core.ktx)

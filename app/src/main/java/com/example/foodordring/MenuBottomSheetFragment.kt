@@ -1,11 +1,12 @@
 package com.example.foodordring
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.foodordring.adaptar.MenuAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.foodordering.adapter.MenuAdapter
 import com.example.foodordring.databinding.FragmentMenuBottomSheetBinding
 import com.example.foodordring.model.MenuItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -13,6 +14,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+
 
 class MenuBottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -57,7 +59,9 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
 
             private fun setAdapeter() {
                 val adapter = MenuAdapter(menuItems, requireContext())
-                binding.menuRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                val itemWidthDp = 150 // Desired item width in dp
+                val noOfColumns = calculateNoOfColumns(requireContext(), itemWidthDp)
+                binding.menuRecyclerView.layoutManager = GridLayoutManager(requireContext(),noOfColumns)
                 binding.menuRecyclerView.adapter = adapter
             }
 
@@ -68,6 +72,19 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
         })
 
     }
+    fun getScreenWidth(context: Context): Int {
+        val displayMetrics = context.resources.displayMetrics
+        return displayMetrics.widthPixels // Returns the screen width in pixels
+    }
+
+    fun calculateNoOfColumns(context: Context, itemWidthDp: Int): Int {
+        val displayMetrics = context.resources.displayMetrics
+        val screenWidthPx = displayMetrics.widthPixels
+        val itemWidthPx = (itemWidthDp * displayMetrics.density).toInt()
+        return screenWidthPx / itemWidthPx
+    }
+
+
 
     companion object {
 

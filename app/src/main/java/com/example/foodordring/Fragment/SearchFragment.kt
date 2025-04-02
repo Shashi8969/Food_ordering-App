@@ -7,26 +7,21 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.foodordring.R
-import com.example.foodordring.adaptar.MenuAdapter
+import com.example.foodordering.adapter.MenuAdapter
 import com.example.foodordring.databinding.FragmentSearchBinding
+import com.example.foodordring.model.MenuItem
 
 
 class SearchFragment : Fragment() {
 
     private  lateinit var binding: FragmentSearchBinding
     private lateinit var adapter: MenuAdapter
-    private val orignalMenuFoodName :List<String> = listOf("Pizza","Burgers","sandwich","momo")
-    private val orignalMenuItemPrice :List<String> = listOf("$5","$6","$7","$8")
-    private val orignalMenuItemImage :List<Int> = listOf(R.drawable.menu1,R.drawable.menu2,R.drawable.menu3,R.drawable.menu4)
+    private var originalMenuItems: MutableList<MenuItem> = mutableListOf()
+//    private val filteredMenuItems = mutableListOf<MenuItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
-    private val filteredMenuFoodName = mutableListOf<String>()
-    private val filteredMenuItemPrice = mutableListOf<String>()
-    private val filteredMenuItemImage = mutableListOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,13 +45,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun showAllMenu() {
-        filteredMenuFoodName.clear()
-        filteredMenuItemPrice.clear()
-        filteredMenuItemImage.clear()
-
-        filteredMenuFoodName.addAll(orignalMenuFoodName)
-        filteredMenuItemPrice.addAll(orignalMenuItemPrice)
-        filteredMenuItemImage.addAll(orignalMenuItemImage)
+//        filteredMenuItems.clear()
+//        filteredMenuItems.addAll(originalMenuItems)
 
         adapter.notifyDataSetChanged()
     }
@@ -78,22 +68,22 @@ class SearchFragment : Fragment() {
     }
 
     private fun filterMenuItems(query: String?) {
-        filteredMenuFoodName.clear()
-        filteredMenuItemPrice.clear()
-        filteredMenuItemImage.clear()
-
-        orignalMenuFoodName.forEachIndexed{ index, foodName ->
-            if (foodName.contains(query.toString(),ignoreCase = true))
-            {
-                filteredMenuFoodName.add(foodName)
-                filteredMenuItemPrice.add(orignalMenuItemPrice[index])
-                filteredMenuItemImage.add(orignalMenuItemImage[index])
-            }
+//        filteredMenuFoodName.clear()
+//        filteredMenuItemPrice.clear()
+//        filteredMenuItemImage.clear()
+//
+//        orignalMenuFoodName.forEachIndexed{ index, foodName ->
+//            if (foodName.contains(query.toString(),ignoreCase = true))
+//            {
+//                filteredMenuFoodName.add(foodName)
+//                filteredMenuItemPrice.add(orignalMenuItemPrice[index])
+//                filteredMenuItemImage.add(orignalMenuItemImage[index])
+//            }
         }
-        adapter.notifyDataSetChanged()
+//        adapter.notifyDataSetChanged()
     }
 
-    companion object {
+//    companion object {
 
-    }
-}
+//    }
+//}

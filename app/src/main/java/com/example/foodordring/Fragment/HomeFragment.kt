@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
+import com.example.foodordering.adapter.MenuAdapter
 import com.example.foodordring.MenuBottomSheetFragment
 import com.example.foodordring.R
-import com.example.foodordring.adaptar.MenuAdapter
 import com.example.foodordring.databinding.FragmentHomeBinding
 import com.example.foodordring.model.MenuItem
 import com.google.firebase.database.DataSnapshot
@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
 
             private fun setPopularItemsAdapter(subList: List<MenuItem>) {
                 val adapter = MenuAdapter(subList, requireContext())
-                binding.popularRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                binding.popularRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3) // '2' specifies the number of columns
                 binding.popularRecyclerView.adapter = adapter
             }
             override fun onCancelled(error: DatabaseError) {
