@@ -55,10 +55,26 @@ class MenuAdapter(
             val menuItem = menuItems[position]
             binding.apply {
                 menuFoodName.text = menuItem.foodName
-                priceMenu.text = menuItem.foodPrice
+                priceCurrent.text = "₹ ${menuItem.foodPrice}"
+                foodDescription.text = menuDesc(menuItem.foodDescription)
                 val uri: Uri = Uri.parse(menuItem.foodImage)
                 Glide.with(context).load(uri).into(menuImage)
+                ratingText.text = menuItem.foodRating.toString()
+                priceDiscounted.text = "₹ ${menuItem.foodDiscountPrice}"
             }
+        }
+
+        private fun menuDesc(description: String?): String {
+            if (description != null) {
+                if (description.length > 24) {
+                    return buildString {
+                        append(description.substring(0, 20))
+                        append("...")
+                    }
+                }
+                return description
+            }
+            return ""
         }
     }
 }
