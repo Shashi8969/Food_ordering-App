@@ -23,6 +23,7 @@ class MenuAdapter(
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         holder.bind(position)
+
     }
 
     override fun getItemCount(): Int = menuItems.size
@@ -55,12 +56,25 @@ class MenuAdapter(
             val menuItem = menuItems[position]
             binding.apply {
                 menuFoodName.text = menuItem.foodName
-                priceCurrent.text = "₹ ${menuItem.foodPrice}"
+                priceCurrent.text = buildString {
+                    append("₹ ")
+                    append(menuItem.foodPrice)
+                }
+                priceCurrent.paintFlags = android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
                 foodDescription.text = menuDesc(menuItem.foodDescription)
                 val uri: Uri = Uri.parse(menuItem.foodImage)
                 Glide.with(context).load(uri).into(menuImage)
                 ratingText.text = menuItem.foodRating.toString()
                 priceDiscounted.text = "₹ ${menuItem.foodDiscountPrice}"
+                favoriteButton.setOnClickListener {
+                    menuItem.isFavorite = !menuItem.isFavorite
+                    if (menuItem.isFavorite) {
+                        favoriteButton.setImageResource(com.example.foodordring.R.drawable.faviourate_filled_heart)
+                    }
+                    else {
+                        favoriteButton.setImageResource(com.example.foodordring.R.drawable.faviourate_empity)
+                    }
+                }
             }
         }
 

@@ -6,4 +6,14 @@
     <color name="iconColor">#2196F3</color>
     <color name="endColor">#15BE77</color>
     <color name="startColor">#53E88B</color>
+    <color name="text_title">#212121</color> <!-- Example color, adjust to your preference -->
+    <color name="text_description">#757575</color>  <!-- A medium gray -->
+    <color name="price_color">#4CAF50</color>  <!-- A green color, adjust to your preference -->
+    <color name="rating_star_empty">#CCCCCC</color>  <!-- Example: Light gray -->
+    <color name="rating_star_filled">#FFC107</color>  <!-- Example: Amber/Gold -->
+    <!-- ... other colors ... -->
+    <color name="price_discounted_color">#FF0000</color>  <!-- Example: Red for discounted -->
+    <color name="price_current_color">#808080</color>  <!-- Example: -->
+    <color name="rating_background">#FAF4EF</color>
+
 </resources>

@@ -103,7 +103,7 @@ class ProfileFragment : Fragment() {
                 "phone" to phone
             )
 
-            userReference.setValue(userProfile)
+            userReference.updateChildren(userData)
                 .addOnSuccessListener {
                     Log.d("ProfileFragment", "Profile updated successfully.")
                     showToast("Profile updated successfully!")

@@ -9,13 +9,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foodordring.R
 import com.example.foodordring.adaptar.BuyAgainAdapter
 import com.example.foodordring.databinding.FragmentHistoryBinding
+import com.example.foodordring.model.OrderDetails
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 
 class HistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var buyAgainAdapter: BuyAgainAdapter
-
-
+    private lateinit var database:FirebaseDatabase
+    private lateinit var auth:FirebaseAuth
+    private lateinit var userId:String
+    private var listOfItems: MutableList<OrderDetails> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +33,22 @@ class HistoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
+        // Initialize Firebase
+        database = FirebaseDatabase.getInstance()
+        auth = FirebaseAuth.getInstance()
+        userId = auth.currentUser?.uid ?: ""
+        val orderReference = database.reference.child("users").child(userId).child("orderHistory")
+        orderReference.get().addOnSuccessListener {
+            if(it.exists()) {
+                for (childSnapshot in it.children) {
+                    val orderDetails = childSnapshot.getValue(OrderDetails::class.java)
+                    if (orderDetails != null) {
+                        listOfItems.add(orderDetails)
+                    }
+                    buyAgainAdapter.notifyDataSetChanged()
+                }
+            }
+        }
 
         setupRecyclerView()
         return binding.root

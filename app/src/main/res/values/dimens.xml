@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="content_padding">16dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="menu_image_height">150dp</dimen>
+    <dimen name="rating_margin_top">8dp</dimen>
+    <dimen name="rating_text_margin_start">8dp</dimen>
+    <dimen name="price_margin_top">8dp</dimen>
+    <dimen name="price_current_margin_start">16dp</dimen>
+</resources>

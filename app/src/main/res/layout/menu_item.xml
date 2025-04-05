@@ -1,75 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="120dp"
-        android:layout_height="170dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+
+<ImageView
+    android:id="@+id/menuImage"
+    android:layout_width="0dp"
+    android:layout_height="160dp"
+    android:scaleType="centerCrop"
+    app:layout_constraintDimensionRatio="H,12:11"
+    android:layout_marginTop="8dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toTopOf="parent"
+tools:src="@tools:sample/backgrounds/scenic"
+android:contentDescription="@string/food_image_description" />  <!-- Important for accessibility -->
+
+
+    <ImageButton
+        android:id="@+id/favoriteButton"
+        android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:background="@android:color/transparent"
+    android:src="@drawable/faviourate_empity"
+    app:layout_constraintTop_toTopOf="@+id/menuImage"
+    app:layout_constraintEnd_toEndOf="@+id/menuImage" />
+
+
+    <TextView
+    android:id="@+id/menuFoodName"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/content_padding"
+    android:layout_marginTop="@dimen/content_padding"
+    android:layout_marginEnd="@dimen/content_padding"
+    android:ellipsize="end"
+    android:maxLines="2"
+    android:textAppearance="@style/TextAppearance.FoodItem.Title"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/menuImage"
+tools:text="Delicious Food Name (Max 2 Lines)" />
+
+    <LinearLayout
+        android:id="@+id/ratingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:layout_marginStart="@dimen/content_padding"
+        android:layout_marginTop="@dimen/rating_margin_top"
+        android:background="@drawable/background_ratting"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/foodDescription">
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/RatingBarSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rating="1"
+            android:progressTint="@color/rating_star_filled"
+            android:numStars="1" />
+
+        <TextView
+            android:id="@+id/ratingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/rating_text_margin_start"
+            android:textAppearance="@style/TextAppearance.FoodItem.Rating"
+            tools:text="4.5" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/foodDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_padding"
+        android:layout_marginEnd="@dimen/content_padding"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textAppearance="@style/TextAppearance.FoodItem.Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/menuFoodName"
+        tools:text="A short and enticing description of the food item.  This should fit within three lines or less for a clean layout." />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<!--    <TextView-->
+<!--        android:id="@+id/priceMenu"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="@dimen/content_padding"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:textAppearance="@style/TextAppearance.FoodItem.Price"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/ratingLayout"-->
+<!--        tools:text="$12.99" />-->
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/menuImage"
-                android:layout_width="94dp"
-                android:layout_height="94dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/roundedImageView"
-                tools:srcCompat="@tools:sample/avatars" />
+    <TextView
+        android:id="@+id/priceDiscounted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textAppearance="@style/TextAppearance.FoodItem.PriceDiscounted"
+        app:layout_constraintBottom_toBottomOf="@+id/priceCurrent"
+        app:layout_constraintStart_toEndOf="@+id/priceCurrent"
+        app:layout_constraintTop_toTopOf="@+id/priceCurrent"
+        tools:text="$10.99" />
 
-            <TextView
-                android:id="@+id/menuFoodName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/yeonsung_regular"
-                android:text="Foodname"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/menuImage" />
+    <TextView
+        android:id="@+id/priceCurrent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/price_current_margin_start"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="@style/TextAppearance.FoodItem.PriceCurrent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingLayout"
+        tools:text="$12.99" />
 
-            <TextView
-                android:id="@+id/priceMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/yeonsung_regular"
-                android:text="TextView"
-                app:layout_constraintStart_toStartOf="@+id/menuFoodName"
-                app:layout_constraintTop_toBottomOf="@+id/menuFoodName" />
 
-            <TextView
-                android:id="@+id/addToCartMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/addtocartshape"
-                android:fontFamily="@font/lato_regular"
-                android:gravity="center"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="Add to  Cart"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/priceMenu" />
+    <!--<Button-->
+<!--    android:id="@+id/addToCartButton"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="8dp"-->
+<!--android:layout_marginEnd="@dimen/content_padding"-->
+<!--android:layout_marginBottom="@dimen/content_padding"-->
+<!--android:text="@string/add_to_cart"-->
+<!--app:layout_constraintBottom_toBottomOf="parent"-->
+<!--app:layout_constraintEnd_toEndOf="parent"-->
+<!--app:layout_constraintTop_toBottomOf="@+id/foodDescription" />-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.cardview.widget.CardView>

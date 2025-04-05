@@ -1,4 +1,4 @@
-package com.example.foodordring
+package com.example.foodordring.Fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -14,7 +14,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-
 
 class MenuBottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -61,7 +60,8 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
                 val adapter = MenuAdapter(menuItems, requireContext())
                 val itemWidthDp = 150 // Desired item width in dp
                 val noOfColumns = calculateNoOfColumns(requireContext(), itemWidthDp)
-                binding.menuRecyclerView.layoutManager = GridLayoutManager(requireContext(),noOfColumns)
+                binding.menuRecyclerView.layoutManager =
+                    GridLayoutManager(requireContext(), noOfColumns)
                 binding.menuRecyclerView.adapter = adapter
             }
 
@@ -71,10 +71,6 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
 
         })
 
-    }
-    fun getScreenWidth(context: Context): Int {
-        val displayMetrics = context.resources.displayMetrics
-        return displayMetrics.widthPixels // Returns the screen width in pixels
     }
 
     fun calculateNoOfColumns(context: Context, itemWidthDp: Int): Int {

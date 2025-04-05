@@ -1,5 +1,6 @@
 package com.example.foodordring.Fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,6 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.foodordering.adapter.MenuAdapter
-import com.example.foodordring.MenuBottomSheetFragment
 import com.example.foodordring.R
 import com.example.foodordring.databinding.FragmentHomeBinding
 import com.example.foodordring.model.MenuItem
@@ -77,7 +77,9 @@ class HomeFragment : Fragment() {
 
             private fun setPopularItemsAdapter(subList: List<MenuItem>) {
                 val adapter = MenuAdapter(subList, requireContext())
-                binding.popularRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3) // '2' specifies the number of columns
+                val itemWidthDp = 150 // Desired item width in dp
+                val noOfColumns = calculateNoOfColumns(requireContext(), itemWidthDp)
+                binding.popularRecyclerView.layoutManager = GridLayoutManager(requireContext(), noOfColumns) // '2' specifies the number of columns
                 binding.popularRecyclerView.adapter = adapter
             }
             override fun onCancelled(error: DatabaseError) {
@@ -85,6 +87,12 @@ class HomeFragment : Fragment() {
             }
         })
 
+    }
+    fun calculateNoOfColumns(context: Context, itemWidthDp: Int): Int {
+        val displayMetrics = context.resources.displayMetrics
+        val screenWidthPx = displayMetrics.widthPixels
+        val itemWidthPx = (itemWidthDp * displayMetrics.density).toInt()
+        return screenWidthPx / itemWidthPx
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

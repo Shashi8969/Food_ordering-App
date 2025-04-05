@@ -5,5 +5,8 @@ data class MenuItem(
     val foodPrice: String?=null,
     val foodImage: String?=null,
     val foodDescription: String?=null,
-    val foodIngredients: String?=null
-)
+    val foodIngredients: String?=null,
+    val foodRating: Double?=null,
+    val foodDiscountPrice: String?=null,
+    var isFavorite: Boolean = false
+    )

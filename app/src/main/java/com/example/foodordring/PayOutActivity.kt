@@ -10,10 +10,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
 
 class PayOutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPayOutBinding
-
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
     private lateinit var name: String
@@ -44,7 +46,6 @@ class PayOutActivity : AppCompatActivity() {
         setUserData()
 
         //Get order details from Firebase
-        val intent = intent
         orderId = intent.getStringExtra("orderId") ?: ""
         foodName = intent.getStringArrayListExtra("foodName") ?: mutableListOf()
         foodPrice = intent.getStringArrayListExtra("foodPrice") ?: mutableListOf()
@@ -54,7 +55,10 @@ class PayOutActivity : AppCompatActivity() {
         foodQuantities = intent.getIntegerArrayListExtra("foodQuantities") ?: mutableListOf()
 
         //Calculate total amount and show it in the UI
-        binding.totalAmount.text = calculateTotalAmount().toString()
+        binding.totalAmount.text = buildString {
+            append("₹")
+            append(calculateTotalAmount().toString())
+        }
         binding.totalAmount.isEnabled = false
 
 
@@ -66,7 +70,10 @@ class PayOutActivity : AppCompatActivity() {
             totalAmount = binding.totalAmount.text.toString()
             if (name.isNotEmpty() && address.isNotEmpty() && phone.isNotEmpty()) {
                 createOrderId()
-                bottomSheetFragment.show(supportFragmentManager, "Test") // Show bottom sheet before finishing
+                bottomSheetFragment.show(
+                    supportFragmentManager,
+                    "Test"
+                ) // Show bottom sheet before finishing
             } else {
                 // Show an error message if any field is empty
                 // You can use a Toast or a more user-friendly dialog
@@ -93,23 +100,29 @@ class PayOutActivity : AppCompatActivity() {
 
     private fun setUserData() {
         val user = auth.currentUser
-        if(user!=null){
+        if (user != null) {
             userId = user.uid
             Log.d("PayOutActivity", "Before databaseReference initialization")
             val userReference = databaseReference.child("users").child(userId)
             Log.d("PayOutActivity", "After databaseReference initialization")
 
-            userReference.addListenerForSingleValueEvent(object: ValueEventListener {
+            userReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
-                        val userName = snapshot.child("name").getValue(String::class.java)?:""
-                        val userAddress = snapshot.child("address").getValue(String::class.java)?:"" // Swapped
-                        val userPhone = snapshot.child("phone").getValue(String::class.java)?:"" // Swapped
+                    if (snapshot.exists()) {
+                        val userName = snapshot.child("name").getValue(String::class.java) ?: ""
+                        val userAddress =
+                            snapshot.child("address").getValue(String::class.java) ?: ""
+                        val userPhone = snapshot.child("phone").getValue(String::class.java) ?: ""
+                        Log.d(
+                            "PayOutActivity",
+                            "User data fetched: $userName, $userAddress, $userPhone"
+                        )
+
 
                         binding.apply {
                             name.setText(userName)
-                            address.setText(userAddress) // Swapped
-                            phone.setText(userPhone) // Swapped
+                            address.setText(userAddress)
+                            phone.setText(userPhone)
                         }
                     }
                 }
@@ -123,20 +136,59 @@ class PayOutActivity : AppCompatActivity() {
             Log.w("PayOutActivity", "User not logged in.")
             // Handle the case where the user is not logged in, e.g., redirect to login
         }
-        // The following lines are likely incorrect, as they override data fetched from Firebase
-        // and use data from the intent, which might not be what you want.  Comment them out
-        // unless you have a specific reason to use intent data as a fallback.
-        /*
-        name = intent.getStringExtra("name") ?: ""
-        address = intent.getStringExtra("address") ?: ""
-        phone = intent.getStringExtra("phone") ?: ""
-        */
+
     }
+
     private fun createOrderId() {
         //Create a orderId in the database
-        userId = auth.currentUser?.uid?:""
-        val time = System.currentTimeMillis()
-        val itemPushKeys =databaseReference.child("orderDetails").child(userId).child("items").push().key
+        userId = auth.currentUser?.uid ?: ""
+        val dateTime = LocalDate.now(ZoneId.of("Asia/Kolkata")).toString()
+        val time = System.currentTimeMillis().toString()
+        orderId = "$userId$time"
+        // Create a map to hold the order details
+        val orderDetails = hashMapOf(
+            "userId" to userId,
+            "orderTime" to LocalTime.now(ZoneId.of("Asia/Kolkata")).toString(),
+            "orderDate" to dateTime,
+            "foodItems" to foodName.zip(foodQuantities) { name, quantity ->
+                hashMapOf("name" to name, "quantity" to quantity)
+            },
+            "totalAmount" to calculateTotalAmount(),
+            "deliveryDetails" to hashMapOf(
+                "name" to name,
+                "address" to address,
+                "phone" to phone
+            )
+            // You can add more order details here as needed, e.g., payment method, status, etc.
+        )
 
+        // Push the order details to the database under a unique order ID
+        databaseReference.child("orders").child(orderId).setValue(orderDetails)
+            .addOnSuccessListener {
+                Log.d("PayOutActivity", "Order created successfully with ID: $orderId")
+                // Order was successfully created, you can now proceed to show the bottom sheet
+                removeItemFromCart()
+                addOrderToHistory(orderDetails)
+            }
+            .addOnFailureListener { e ->
+                Log.e("PayOutActivity", "Error creating order: ${e.message}", e)
+                // Handle the error, e.g., show an error message to the user
+            }
+    }
+
+    private fun addOrderToHistory(orderDetails: Any) {
+        databaseReference.child("users").child(userId).child("orderHistory").child(orderId).setValue(orderDetails)
+            .addOnSuccessListener {
+                Log.d("PayOutActivity", "Order ID added to history successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("PayOutActivity", "Error adding order ID to history: ${e.message}", e)
+
+            }
+    }
+
+    private fun removeItemFromCart() {
+        val cartReference = databaseReference.child("users").child(userId).child("CartItems")
+        cartReference.removeValue()
     }
 }

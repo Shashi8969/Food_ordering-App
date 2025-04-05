@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.FoodItem.Title" parent="TextAppearance.AppCompat.Title">
+        <!-- Customize the title text appearance here -->
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_title</item> <!-- Define your text color resource -->
+        <!-- You can add other attributes like fontFamily, etc. -->
+    </style>
+    <style name="TextAppearance.FoodItem.Description" parent="TextAppearance.Material3.BodyMedium">
+        <!-- Customize description text here -->
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>  <!-- Themed color -->
+        <item name="android:maxLines">3</item> <!-- Optional: Limit lines if needed -->
+        <item name="android:ellipsize">end</item> <!-- Optional: Ellipsize if truncated -->
+        <!-- Other attributes... -->
+    </style>
+    <style name="TextAppearance.FoodItem.Price" parent="TextAppearance.AppCompat.Body2">  <!-- Or another suitable base style -->
+        <!-- Customize the price text here -->
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>  <!-- Or normal -->
+        <item name="android:textColor">@color/price_color</item>  <!-- Define this color -->
+        <item name="android:scaleType">centerCrop</item>
+        <!-- Add other attributes as needed -->
+    </style>
+    <style name="RatingBarTheme" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/rating_star_empty</item>  <!-- Color for empty stars -->
+        <item name="colorControlActivated">@color/rating_star_filled</item>  <!-- Color for filled stars -->
+    </style>
+
+    <style name="TextAppearance.FoodItem.Rating" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@android:color/secondary_text_light</item>
+    </style>
+
+    <style name="RatingBarSmall" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/rating_star_empty</item>  <!-- Define this color -->
+        <item name="colorControlActivated">@color/rating_star_filled</item> <!-- Define this color -->
+    </style>
+    <style name="TextAppearance.FoodItem.PriceDiscounted" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/price_discounted_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.FoodItem.PriceCurrent" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/price_current_color</item>
+    </style>
+</resources>
