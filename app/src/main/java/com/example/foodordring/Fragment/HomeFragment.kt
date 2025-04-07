@@ -1,12 +1,16 @@
 package com.example.foodordring.Fragment
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
@@ -76,18 +80,23 @@ class HomeFragment : Fragment() {
             }
 
             private fun setPopularItemsAdapter(subList: List<MenuItem>) {
-                val adapter = MenuAdapter(subList, requireContext())
+                val adapter = MenuAdapter(subList as MutableList<MenuItem>, requireContext())
                 val itemWidthDp = 150 // Desired item width in dp
                 val noOfColumns = calculateNoOfColumns(requireContext(), itemWidthDp)
-                binding.popularRecyclerView.layoutManager = GridLayoutManager(requireContext(), noOfColumns) // '2' specifies the number of columns
+                binding.popularRecyclerView.layoutManager = GridLayoutManager(
+                    requireContext(),
+                    noOfColumns
+                ) // '2' specifies the number of columns
                 binding.popularRecyclerView.adapter = adapter
             }
+
             override fun onCancelled(error: DatabaseError) {
                 // Handle the error if needed
             }
         })
 
     }
+
     fun calculateNoOfColumns(context: Context, itemWidthDp: Int): Int {
         val displayMetrics = context.resources.displayMetrics
         val screenWidthPx = displayMetrics.widthPixels
@@ -118,5 +127,33 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), itemMessage, Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    showExitConfirmationDialog()
+                }
+            }
+        )
+    }
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(requireContext()) // Use requireContext() in a Fragment
+            .setTitle("Exit?")
+            .setMessage("Are you sure you want to exit?")
+            .setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                // In a Fragment, navigate up or perform other actions, not finish()
+                findNavController().navigateUp() // Example with Navigation Component
+                // or
+                requireActivity().finish() // If you want to exit the entire app
+            }
+            .setNegativeButton("No") { dialog: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }
