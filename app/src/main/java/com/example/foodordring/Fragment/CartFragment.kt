@@ -1,4 +1,4 @@
-package com.example.foodordring.Fragment
+package com.example.foodordring.Fragment // Adjust your package name
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +19,13 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+// Data class to represent an order item (you might need to adjust this)
+data class OrderItem(
+    val foodName: String,
+    val foodPrice: Double,
+    val quantity: Int,
+    // Add other relevant details like foodId, image URL, etc.
+)
 
 class CartFragment : Fragment() {
 
@@ -29,7 +36,7 @@ class CartFragment : Fragment() {
     private lateinit var foodPrice: MutableList<String>
     private lateinit var foodDescription: MutableList<String>
     private lateinit var foodImageUrl: MutableList<String>
-    private lateinit var foodUngredients: MutableList<String>
+    private lateinit var foodIngredients: MutableList<String>
     private lateinit var quantity: MutableList<Int>
     private lateinit var cartAdapter: CartAdapter
     private lateinit var userId: String
@@ -37,7 +44,8 @@ class CartFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
+    private var cartItemsList: MutableList<CartItems> = mutableListOf() // Store CartItems directly
+    private var currentDiscount: Double = 0.0 // Keep track of the current discount
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -49,7 +57,7 @@ class CartFragment : Fragment() {
         retriveCartItems()
 
 
-        binding.proceedbutton.setOnClickListener {
+        binding.checkoutButton.setOnClickListener {
             //get order items details before proceeding to checkout
             getOrderItemsDetails()
         }
@@ -77,7 +85,7 @@ class CartFragment : Fragment() {
                     cartItems?.foodPrice?.let { foodPrice.add(it) }
                     cartItems?.foodDescription?.let { foodDescription.add(it) }
                     cartItems?.foodImage?.let { foodImageUrl.add(it) }
-                    cartItems?.foodIngredient?.let { foodIngredients.add(it) }
+                    cartItems?.foodIngredients?.let { foodIngredients.add(it) }
                 }
                 orderNow(
                     foodName,
@@ -127,6 +135,18 @@ class CartFragment : Fragment() {
         })
     }
 
+
+    private fun onQuantityChanged(position: Int, newQuantity: Int) {
+        if (position in 0 until cartItemsList.size) {
+            cartItemsList[position].quantity = newQuantity
+            updateTotalAmount(currentDiscount) // Update total whenever quantity changes.
+            // Notify the adapter that the item at the specified position has changed.
+            cartAdapter.notifyItemChanged(position)
+
+
+        }
+    }
+
     private fun retriveCartItems() {
         //Database reference to the Firebase
         database = FirebaseDatabase.getInstance()
@@ -139,7 +159,7 @@ class CartFragment : Fragment() {
         foodPrice = mutableListOf()
         foodDescription = mutableListOf()
         foodImageUrl = mutableListOf()
-        foodUngredients = mutableListOf()
+        foodIngredients = mutableListOf()
         quantity = mutableListOf()
 
         //Retrieve data from Firebase
@@ -153,7 +173,7 @@ class CartFragment : Fragment() {
                     cartItem?.foodPrice?.let { foodPrice.add(it) }
                     cartItem?.foodDescription?.let { foodDescription.add(it) }
                     cartItem?.foodImage?.let { foodImageUrl.add(it) }
-                    cartItem?.foodIngredient?.let { foodUngredients.add(it) }
+                    cartItem?.foodIngredients?.let { foodIngredients.add(it) }
                     cartItem?.quantity?.let { quantity.add(it) }
                 }
                 setAdatper()
@@ -166,7 +186,7 @@ class CartFragment : Fragment() {
                     foodPrice,
                     foodImageUrl,
                     foodDescription,
-                    foodUngredients,
+                    foodIngredients,
                     quantity
                 )
                 binding.cartRecyclerView.layoutManager =
@@ -186,15 +206,98 @@ class CartFragment : Fragment() {
 
     }
 
+    private fun setupCouponButton() {
+        binding.applyCouponButton.setOnClickListener {
+            val couponCode = binding.couponCodeEditText.text.toString()
+            applyCoupon(couponCode)
+        }
+    }
+
+    private fun applyCoupon(couponCode: String) {
+        if (isValidCoupon(couponCode)) {
+            val discount = calculateDiscount(couponCode)
+            currentDiscount = discount //Store the current discount
+            updateTotalAmount(discount)
+            Toast.makeText(context, "Coupon applied!", Toast.LENGTH_SHORT).show()
+        } else {
+            currentDiscount = 0.0 //Reset discount if invalid
+            updateTotalAmount(0.0)
+            Toast.makeText(context, "Invalid coupon code.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    //  ---  COUPON FUNCTIONS (PLACEHOLDERS - IMPLEMENT YOUR LOGIC)  ---
+
+    private fun isValidCoupon(couponCode: String): Boolean {
+        // TODO: Implement your logic to validate the coupon code.
+        // Example (replace with your actual validation):
+        return couponCode == "DISCOUNT10" // Sample: a valid coupon code
+    }
+
+    private fun calculateDiscount(couponCode: String): Double {
+        // TODO: Implement your logic to calculate the discount amount based on the code.
+        // Example (replace with your actual calculation):
+        return if (couponCode == "DISCOUNT10") {
+            calculateTotal() * 0.10 // 10% discount
+        } else {
+            0.0
+        }
+    }
+
+    // --- ---
+
+    private fun setupCheckoutButton() {
+        binding.checkoutButton.setOnClickListener {
+            val orderItems = getOrderItems()
+            if (orderItems.isNotEmpty()) {
+                startPayment(orderItems)
+            } else {
+                Toast.makeText(context, "Your cart is empty.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun getOrderItems(): List<OrderItem> {
+        return cartItemsList.map { cartItem ->
+            OrderItem(
+                foodName = cartItem.foodName ?: "", // Provide a default value for foodName
+                foodPrice = cartItem.foodDiscountPrice?.toDoubleOrNull() ?: cartItem.foodPrice?.toDoubleOrNull() ?: 0.0,
+                quantity = cartItem.quantity ?: 1,
+            )
+        }
+    }
+
+    private fun startPayment(orderItems: List<OrderItem>) {
+        // TODO: Implement your payment processing integration here.
+        //  Example (replace with your actual implementation - this just passes data to PayOutActivity):
+        val intent = Intent(requireContext(), PayOutActivity::class.java)
+        //  You might serialize orderItems to a String or Parcelable if needed
+        val foodNames = orderItems.map { it.foodName }.toTypedArray()
+        val foodPrices = orderItems.map { it.foodPrice }.toTypedArray()
+        val quantities = orderItems.map { it.quantity }.toIntArray()
+        intent.putExtra("foodNames", foodNames)
+        intent.putExtra("foodPrices", foodPrices)
+        intent.putExtra("quantities", quantities)
+        intent.putExtra("totalAmount", calculateTotal() - currentDiscount) // Pass the total
+        startActivity(intent)
+
+        Toast.makeText(context, "Payment started (not implemented fully yet)", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun calculateTotal(): Double {
+        return cartItemsList.sumOf {
+            val price = it.foodDiscountPrice?.toDoubleOrNull() ?: it.foodPrice?.toDoubleOrNull() ?: 0.0
+            price * (it.quantity ?: 1).toDouble()
+        }
+    }
+
+    private fun updateTotalAmount(discount: Double = 0.0) {
+        val total = calculateTotal() - discount
+        binding.totalAmountTextView.text = "Total: ₹%.2f".format(total)
+    }
 
     companion object {
-
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CartFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
+        fun newInstance() = CartFragment()
     }
 }

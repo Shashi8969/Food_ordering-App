@@ -2,9 +2,9 @@ package com.example.foodordring.adaptar
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodordring.databinding.CartItemBinding
@@ -18,11 +18,11 @@ import com.google.firebase.database.ValueEventListener
 class CartAdapter(
     private val context: Context,
     private val cartItems: MutableList<String>,
-    private val cartItemPrice: MutableList<String>,
-    private val CartImage: MutableList<String>,
-    private var cartDescription: MutableList<String>,
-    private var cartIngredients: MutableList<String>,
-    private var cartQuantity: MutableList<Int>
+    private val foodItemPrice: MutableList<String>,
+    private val foodImage: MutableList<String>,
+    private var foodDescription: MutableList<String>,
+    private var foodIngredients: MutableList<String>,
+    private var quantity: MutableList<Int>
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -68,10 +68,13 @@ class CartAdapter(
 
             binding.apply {
                 CartFoodName.text = cartItems[position]
-                CartItemPrice.text = cartItemPrice[position]
+                CartItemPrice.text = buildString {
+        append("₹ ")
+        append(foodItemPrice[position])
+    }
                 quantity.text = itemquntities[position].toString()
                 //set image into imageview
-                val uri: Uri = Uri.parse(CartImage[position])
+                val uri: Uri = Uri.parse(foodImage[position])
                 Glide.with(context).load(uri).into(cartImage)
 
                 miniusButton.setOnClickListener {
@@ -99,28 +102,17 @@ class CartAdapter(
 
 
         private fun removeItem(position: Int, uniqueKey: String) {
-            if (uniqueKey!=null){
-                cartItemsReference.child(uniqueKey).removeValue().addOnSuccessListener {
+            cartItemsReference.child(uniqueKey).removeValue()
+                .addOnSuccessListener {
                     cartItems.removeAt(position)
-                    cartItemPrice.removeAt(position)
-                    CartImage.removeAt(position)
-                    cartDescription.removeAt(position)
-                    cartIngredients.removeAt(position)
-
-                    Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
-
-                    //update itemQuantities
-                    itemquntities = itemquntities.filterIndexed { index, _ -> index != position }.toIntArray()
                     notifyItemRemoved(position)
                     notifyItemRangeChanged(position, cartItems.size)
-
-                }.addOnFailureListener {
-                    Toast.makeText(context, "Failed to remove item", Toast.LENGTH_SHORT).show()
-            }
-
+                }
+                .addOnFailureListener {
+                    //  Consider showing an error message to the user
+                    Log.e("CartAdapter", "Error removing item: ${it.message}")
                 }
         }
-
 
         private fun getUniqueKey(positionRetrive: Int, onComplete: (String?) -> Unit) {
             cartItemsReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -141,7 +133,7 @@ class CartAdapter(
                 }
 
 
-        })
+            })
+        }
     }
-}
 }
