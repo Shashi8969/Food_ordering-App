@@ -19,6 +19,7 @@ import com.example.foodordering.adapter.MenuAdapter
 import com.example.foodordring.R
 import com.example.foodordring.databinding.FragmentHomeBinding
 import com.example.foodordring.model.MenuItem
+import com.example.foodordring.notification_Bottom_Fragment
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -45,6 +46,11 @@ class HomeFragment : Fragment() {
         binding.viewAllMenu.setOnClickListener {
             val bottomSheetDialog = MenuBottomSheetFragment()
             bottomSheetDialog.show(parentFragmentManager, "Test")
+        }
+        //Notification Button Click Listener
+        binding.notificationButton.setOnClickListener {
+            val bottomSheet = notification_Bottom_Fragment()
+            bottomSheet.show(parentFragmentManager, "Test")
         }
 
         //Retrieve and display popular menu items

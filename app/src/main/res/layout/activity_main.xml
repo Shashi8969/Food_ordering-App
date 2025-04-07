@@ -8,51 +8,24 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/userProfilePicture"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="User Profile Picture"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/user" />  <!-- Placeholder image -->
+    <!-- Placeholder image -->
 
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="24dp"
-        android:fontFamily="@font/yeonsung_regular"
-        android:text="Welcome, User!"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/userProfilePicture"
-        app:layout_constraintEnd_toStartOf="@+id/notificationButton"
-        app:layout_constraintStart_toEndOf="@+id/userProfilePicture"
-        app:layout_constraintTop_toTopOf="@+id/userProfilePicture" />
-
-    <ImageView
-        android:id="@+id/notificationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/titleTextView"
-        app:srcCompat="@drawable/bell"
-        app:tint="@color/gray_700" />
+                android:fontFamily="@font/yeonsung_regular"
+        android:text=""
+           android:textColor="@color/black"
+        android:textSize="1sp"
+        />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
