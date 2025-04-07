@@ -2,6 +2,7 @@ package com.example.foodordring.Fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,12 +45,17 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
         database = FirebaseDatabase.getInstance()
         val menuRef = database.getReference("Menu")
         menuItems = mutableListOf()
-        menuRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        menuRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (itemSnapshot in snapshot.children) {
                     val menuItem = itemSnapshot.getValue(MenuItem::class.java)
-                    menuItem?.let {
-                        menuItems.add(it)
+                    val itemId = itemSnapshot.key
+
+                    Log.d("MenuFragment", "Item ID: $itemId")
+                    if (menuItem != null && itemId != null) {
+                        menuItem?.itemId = itemId
+                        Log.d("MenuFragment", "Item ID after setting: ${menuItem?.itemId}")
+                        menuItems.add(menuItem)
                     }
                     //Set adapter
                     setAdapeter()
@@ -66,7 +72,7 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Log.e("DataLoad", "Error loading menu items: ${error.message}")
             }
 
         })
