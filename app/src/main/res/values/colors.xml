@@ -15,5 +15,8 @@
     <color name="price_discounted_color">#FF0000</color>  <!-- Example: Red for discounted -->
     <color name="price_current_color">#808080</color>  <!-- Example: -->
     <color name="rating_background">#FAF4EF</color>
+    <color name="your_selected_color">#FF6200EE</color> <!-- Example: a purple color -->
+    <color name="your_unselected_color">#FF888888</color> <!-- Example: a medium gray -->
+    <color name="gray_700">#FF757575</color>
 
 </resources>
