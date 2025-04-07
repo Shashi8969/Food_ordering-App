@@ -18,6 +18,8 @@ class DetailsActivity : AppCompatActivity() {
     private var foodImage: String? = null
     private var foodDescription: String? = null
     private var foodIngredient: String? = null
+    private var foodDiscountPrice: String? = null
+    private var itemId: String? = null
     private lateinit var auth: FirebaseAuth
 
 
@@ -44,7 +46,7 @@ class DetailsActivity : AppCompatActivity() {
         val database: DatabaseReference = FirebaseDatabase.getInstance().reference
         val userId = auth.currentUser?.uid?: ""
         //Create a cart item objects
-        val cartItem = CartItems(foodName.toString(),foodPrice.toString(),foodImage.toString(),foodDescription.toString(),foodIngredient.toString(),1)
+        val cartItem = CartItems(foodName.toString(),foodPrice.toString(),foodImage.toString(),foodDescription.toString(),foodIngredient.toString(),foodDiscountPrice.toString(),quantity = 1,itemId.toString())
 
         //Save data to cart
         database.child("users").child(userId).child("CartItems").push().setValue(cartItem)
@@ -62,6 +64,8 @@ class DetailsActivity : AppCompatActivity() {
         foodDescription = intent.getStringExtra("MenuItemDescription")
         foodIngredient = intent.getStringExtra("MenuItemIngredient")
         foodImage = intent.getStringExtra("MenuItemImage")
+        foodDiscountPrice = intent.getStringExtra("MenuItemDiscountPrice")
+        itemId = intent.getStringExtra("itemId")
 
         with(binding) {
             detailsFoodName.text = foodName
