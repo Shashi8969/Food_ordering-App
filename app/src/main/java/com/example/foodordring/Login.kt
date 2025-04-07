@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.credentials.CredentialManager
 import com.example.foodordring.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -30,21 +29,20 @@ class Login : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var isPasswordVisible = false
     private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var credentialManager: CredentialManager
-    private lateinit var signInIntentLauncher: ActivityResultLauncher<Intent>  // Launcher for the new sign-in method
+    // private lateinit var credentialManager: CredentialManager // Unused?
+    private lateinit var signInIntentLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set up password visibility toggle (as before)
+        // Password visibility toggle (seems fine)
         setupPasswordVisibilityToggle(binding.etPassword)
         checkIfUserIsLoggedIn()
 
         binding.txtCreate.setOnClickListener {
-            val intent = Intent(this, Signup::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, Signup::class.java))
         }
 
         auth = Firebase.auth
@@ -53,10 +51,10 @@ class Login : AppCompatActivity() {
             loginWithEmailAndPassword()
         }
 
-        //Initialize Credential Manager
-        credentialManager = CredentialManager.create(this)
+        // Initialize Credential Manager - Commenting out as it appears unused.  Remove if not needed.
+        // credentialManager = CredentialManager.create(this)
 
-        //Initialize the ActivityResultLauncher for Google Sign-In
+        // Initialize the ActivityResultLauncher for Google Sign-In
         signInIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 val task: Task<GoogleSignInAccount> =
@@ -72,9 +70,16 @@ class Login : AppCompatActivity() {
                         ).show()
                     }
                 } catch (e: ApiException) {
-                    Log.w(TAG, "Google sign in failed", e)
-                    Toast.makeText(this, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT)
-                        .show()
+                    // **Improved Error Handling (crucial):**
+                    val statusCode = e.statusCode
+                    val message = e.message
+                    Log.e(TAG, "Google Sign-In failed (code $statusCode): $message")
+                    val errorMessage = when (statusCode) {
+                        10 -> "Google Sign-in failed. Please check your internet connection and try again." // More specific
+                        // Add other status code handling as needed (see GoogleSignInStatusCodes)
+                        else -> "Google Sign-in failed: ${e.message}" // Include the original message
+                    }
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -85,17 +90,18 @@ class Login : AppCompatActivity() {
     }
 
     private fun checkIfUserIsLoggedIn() {
-        val auth = FirebaseAuth.getInstance()
+        val auth = FirebaseAuth.getInstance() // Use the existing 'auth' instance instead?
         if (auth.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         } else {
-            auth.signOut()
+            // auth.signOut() // **Remove this signOut() here!**
+            // It's causing a sign-out when the user ISN'T logged in.
+            // Only sign out on explicit logout action.
         }
-
     }
 
-
+    // Password Visibility Toggle (seems fine)
     @SuppressLint("ClickableViewAccessibility")
     private fun setupPasswordVisibilityToggle(passwordEditText: EditText) {
         passwordEditText.setOnTouchListener { _, event ->
@@ -130,7 +136,6 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // ... (rest of your loginWithEmailAndPassword, setupPasswordVisibilityToggle, etc. as before) ...
 
     private fun signInWithGoogle() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -143,6 +148,7 @@ class Login : AppCompatActivity() {
         signInIntentLauncher.launch(signInIntent)
     }
 
+    // Email/Password Login (seems fine)
     private fun loginWithEmailAndPassword() {
         val email = binding.etEmail.text.toString()
         val password = binding.etPassword.text.toString()
@@ -174,8 +180,9 @@ class Login : AppCompatActivity() {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
+                // **Improved Error Handling:**
                 Log.w(TAG, "signInWithCredential:failure", task.exception)
-                Toast.makeText(this, "Firebase authentication failed.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Firebase authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -183,6 +190,4 @@ class Login : AppCompatActivity() {
     companion object {
         private const val TAG = "LoginActivity"
     }
-
-
 }
