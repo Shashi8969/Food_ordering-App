@@ -5,7 +5,10 @@ import android.os.Parcelable
 data class OrderItem(
     val foodName: String? = null,
     val foodPrice: Double = 0.0,
-    val quantity: Int = 0
+    val quantity: Int = 0,
+    val foodId: String? = null,
+    val foodImage: String? = null,
+    val foodDescription: String? = null,
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
