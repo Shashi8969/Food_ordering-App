@@ -24,7 +24,7 @@ class PayOutActivity : AppCompatActivity() {
     private lateinit var address: String
     private lateinit var phone: String
     private var totalAmount: Double = 0.0
-    private lateinit var orderItems: ArrayList<OrderItem>
+    private var orderItems: ArrayList<OrderItem> = ArrayList() // Initialize orderItems
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var orderId: String
@@ -40,11 +40,11 @@ class PayOutActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         // Retrieve data from intent
-        val orderItems: ArrayList<OrderItem>? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableArrayListExtra("orderItems", OrderItem::class.java)
+        orderItems = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayListExtra("orderItems", OrderItem::class.java) ?: ArrayList()
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableArrayListExtra("orderItems")
+            intent.getParcelableArrayListExtra("orderItems") ?: ArrayList()
         }
         totalAmount = intent.getDoubleExtra("discountedTotalPrice", 0.0)
         Log.d("PayOutActivity", "Received orderItems: $orderItems")
@@ -64,11 +64,12 @@ class PayOutActivity : AppCompatActivity() {
             phone = binding.phone.text.toString()
 
             if (name.isNotEmpty() && address.isNotEmpty() && phone.isNotEmpty()) {
+                Log.d("PayOutActivity", "Placing order with items: $orderItems")
                 createOrderId()
                 bottomSheetFragment.show(
                     supportFragmentManager,
                     "Test"
-                ) // Show bottom sheet before finishing
+                )
             } else {
                 Log.w("PayOutActivity", "Please fill in all fields.")
                 // You can optionally display a Toast here to inform the user.
@@ -135,7 +136,7 @@ class PayOutActivity : AppCompatActivity() {
                 "address" to address,
                 "phone" to phone
             )
-            // You can add more order details here as needed, e.g., payment method, status, etc.
+
         )
 
         // Push the order details to the database under a unique order ID
@@ -168,4 +169,3 @@ class PayOutActivity : AppCompatActivity() {
         cartReference.removeValue()
     }
 }
-
