@@ -20,6 +20,7 @@ import com.example.foodordring.R
 import com.example.foodordring.databinding.FragmentHomeBinding
 import com.example.foodordring.model.MenuItem
 import com.example.foodordring.notification_Bottom_Fragment
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -32,6 +33,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var database: FirebaseDatabase
     private lateinit var menuItems: MutableList<MenuItem>
+    private var auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,7 @@ class HomeFragment : Fragment() {
 
         //Retrieve and display popular menu items
         retrieveAndDisplayPopularMenuItems()
+        updateUserName()
         return binding.root
     }
 
@@ -63,7 +66,7 @@ class HomeFragment : Fragment() {
         database = FirebaseDatabase.getInstance()
         val menuRef: DatabaseReference = database.getReference("Menu")
         menuItems = mutableListOf()
-
+        //Retrieve data from the database
         menuRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (itemSnapshot in snapshot.children) {
@@ -146,7 +149,24 @@ class HomeFragment : Fragment() {
             }
         )
     }
+    private fun updateUserName(){
+        val userId = auth.currentUser?.uid?: ""
+        if(userId != null){
 
+        val userRef: DatabaseReference = database.reference.child("users").child(userId)
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val username = snapshot.child("name").value.toString()
+                    binding.usernameTextView.text = "Welcome, $username"
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+        }
+
+
+    }
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(requireContext()) // Use requireContext() in a Fragment
             .setTitle("Exit?")
