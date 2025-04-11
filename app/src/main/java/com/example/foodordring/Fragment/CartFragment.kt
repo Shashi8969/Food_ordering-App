@@ -13,19 +13,13 @@ import com.example.foodordring.PayOutActivity
 import com.example.foodordring.adaptar.CartAdapter
 import com.example.foodordring.databinding.FragmentCartBinding
 import com.example.foodordring.model.CartItems
+import com.example.foodordring.model.OrderItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-
-data class OrderItem(
-    val foodName: String,
-    val foodPrice: Double,
-    val quantity: Int,
-    // Add other relevant details like foodId, image URL, etc., if needed.
-)
 
 class CartFragment : Fragment() {
 
@@ -165,14 +159,16 @@ class CartFragment : Fragment() {
         }
 
         val discountedTotalPrice = calculateTotal() - currentDiscount
-        orderNow(orderItems, discountedTotalPrice)
+        orderNow(ArrayList(orderItems), discountedTotalPrice)
     }
 
-    private fun orderNow(orderItems: List<OrderItem>, discountedTotalPrice: Double) {
+    private fun orderNow(orderItems: ArrayList<OrderItem>, discountedTotalPrice: Double) {
         if (isAdded && context != null) {
             val intent = Intent(requireContext(), PayOutActivity::class.java).apply {
-                putExtra("orderItems", ArrayList(orderItems)) // Consider using Parcelable for OrderItem
+                putParcelableArrayListExtra("orderItems", orderItems) // This line should now be correct
                 putExtra("discountedTotalPrice", discountedTotalPrice)
+                Log.d("CartFragment", "Sending orderItems: $orderItems")
+                Log.d("CartFragment", "Sending discountedTotalPrice: $discountedTotalPrice")
             }
             startActivity(intent)
         }

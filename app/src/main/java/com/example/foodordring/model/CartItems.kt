@@ -7,6 +7,6 @@ data class CartItems(
     val foodDescription: String?=null,
     val foodIngredients: String?=null,
     val foodDiscountPrice: String?=null,
-    var quantity: Int? = 1,
+    var quantity: Int?=null,
     var itemId: String? = null
 )
