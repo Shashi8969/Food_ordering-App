@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
@@ -149,23 +151,48 @@ class HomeFragment : Fragment() {
             }
         )
     }
-    private fun updateUserName(){
-        val userId = auth.currentUser?.uid?: ""
-        if(userId != null){
-
-        val userRef: DatabaseReference = database.reference.child("users").child(userId)
-            userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+   private fun updateUserName() {
+        val userId = auth.currentUser?.uid ?: ""
+        if (userId.isNotEmpty()) { // Check if userId is not empty
+            val userRef: DatabaseReference = database.reference.child("users").child(userId)
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val username = snapshot.child("name").value.toString()
-                    binding.usernameTextView.text = "Welcome, $username"
+                    if (snapshot.exists()) { //Check if snapshot exists
+                        val username = snapshot.child("name").getValue(String::class.java) ?: ""
+                        val profileImageUrl = snapshot.child("profileImageUrl").getValue(String::class.java)
+
+                        binding.usernameTextView.text = "Welcome, $username"
+
+                        if (profileImageUrl != null) {
+                            Glide.with(this@HomeFragment) // Use this@HomeFragment
+                                .load(profileImageUrl)
+                                .placeholder(R.drawable.user) // Replace with your default image
+                                .circleCrop() // To display as circle
+                                .into(binding.userProfilePicture)
+                        } else {
+                            binding.userProfilePicture.setImageResource(R.drawable.user)
+                        }
+                    } else {
+                        Log.w("HomeFragment", "No data found for user: $userId")
+                        //Handle the case where no user data exists (e.g. set default values)
+                        binding.usernameTextView.text = "Welcome, Guest"
+                        binding.userProfilePicture.setImageResource(R.drawable.user)
+                    }
                 }
+
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    Log.e("HomeFragment", "Database error: ${error.message}")
+                    //Handle the error (e.g. display an error message)
+                    binding.usernameTextView.text = "Welcome, Guest" // Set a default
+                    binding.userProfilePicture.setImageResource(R.drawable.user)
+                    Toast.makeText(requireContext(), "Error loading user data", Toast.LENGTH_SHORT).show()
                 }
             })
+        } else {
+            // Handle case where no user is logged in
+            binding.usernameTextView.text = "Welcome, Guest"
+            binding.userProfilePicture.setImageResource(R.drawable.user)
         }
-
-
     }
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(requireContext()) // Use requireContext() in a Fragment
