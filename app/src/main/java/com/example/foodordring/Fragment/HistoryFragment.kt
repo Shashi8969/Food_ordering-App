@@ -1,6 +1,5 @@
 package com.example.foodordring.Fragment
 
-import OrderItem
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,35 +23,32 @@ class HistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var buyAgainAdapter: BuyAgainAdapter
     private lateinit var database: FirebaseDatabase
-    private lateinit var auth: FirebaseAuth  // Initialize auth here
+    private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
-    private var listOfItems: MutableList<OrderItem> = mutableListOf()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Initialize Firebase Auth in onCreate
-        auth = FirebaseAuth.getInstance()
-    }
+    private val listOfItems: MutableList<RecentBuyModel> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
-
-        // Initialize Firebase
         database = FirebaseDatabase.getInstance()
+        auth = FirebaseAuth.getInstance()
 
-        // Retrieve and display order history
+        setupRecyclerView() // Initialize RecyclerView *before* fetching data
         retrieveOrderHistory()
-
-        setupRecyclerView()
         return binding.root
     }
 
+    private fun setupRecyclerView() {
+        buyAgainAdapter = BuyAgainAdapter(listOfItems) // Initialize with an empty list
+        binding.buyAgainRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = buyAgainAdapter
+        }
+    }
+
     private fun retrieveOrderHistory() {
-        binding.recentBuyItemConstraintLayout.visibility = View.INVISIBLE
         userId = auth.currentUser?.uid ?: ""
         Log.d("HistoryFragment", "User ID: $userId")
 
@@ -62,40 +58,60 @@ class HistoryFragment : Fragment() {
         }
 
         val buyItemReference = database.reference.child("users").child(userId).child("orderHistory")
-        val sortingQuery = buyItemReference.orderByChild("timestamp").limitToLast(1) // Assuming timestamp is still directly under the orderId node
-
-        sortingQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+        buyItemReference.orderByChild("timestamp").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("HistoryFragment", "DataSnapshot exists: ${snapshot.exists()}")
-                Log.d("HistoryFragment", "Number of children: ${snapshot.childrenCount}")
+                val orderHistoryItems = mutableListOf<RecentBuyModel>()
+                var mostRecentItem: RecentBuyModel? = null
 
                 if (snapshot.hasChildren()) {
-                    val mostRecentOrderSnapshot = snapshot.children.last() // Get the most recent order
-                    Log.d("HistoryFragment", "Most recent order key: ${mostRecentOrderSnapshot.key}")
+                    // Since we ordered by timestamp, the last child is the most recent
+                    val mostRecentOrderSnapshot = snapshot.children.last()
 
-                    // Check if "foodItems" exists within the most recent order
                     if (mostRecentOrderSnapshot.hasChild("foodItems")) {
                         val foodItemsSnapshot = mostRecentOrderSnapshot.child("foodItems")
-
-                        //Assuming foodItems is a List
-                        if(foodItemsSnapshot.childrenCount > 0){
-                            val firstFoodItemSnapshot = foodItemsSnapshot.children.first() // Get first item.
-                            val buyHistoryItem = firstFoodItemSnapshot.getValue(RecentBuyModel::class.java)
-                            Log.d("HistoryFragment", "Retrieved OrderItem: $buyHistoryItem")
-                            buyHistoryItem?.let {
-                                setDataInRecentBuyItem(it)
-                            }
-                        } else{
-                            Log.d("HistoryFragment", "No Food items found in history")
+                        //Assumes foodItems is a List. Adapt if it is a map!
+                        if(foodItemsSnapshot.hasChildren()){
+                            val firstFoodItemSnapshot = foodItemsSnapshot.children.first()
+                            mostRecentItem = firstFoodItemSnapshot.getValue(RecentBuyModel::class.java)
                         }
 
-                    } else {
-                        Log.w("HistoryFragment", "No 'foodItems' found in the most recent order.")
+                        if (mostRecentItem != null) {
+                            setDataInRecentBuyItem(mostRecentItem!!)
+                        }
                     }
+                    // Collect all food items EXCEPT the most recent one for the RecyclerView.
+                    for (orderSnapshot in snapshot.children) {
+                        if (orderSnapshot.key != mostRecentOrderSnapshot.key) {
+                            if (orderSnapshot.hasChild("foodItems")) {
+                                val foodItems = orderSnapshot.child("foodItems")
+                                for (foodItemSnapshot in foodItems.children) {
+                                    val buyHistoryItem = foodItemSnapshot.getValue(RecentBuyModel::class.java)
+                                    buyHistoryItem?.let {
+                                        orderHistoryItems.add(it)
+                                    }
+                                }
+                            }
+                        }
+                        else { //For the most recent order. Get all except the first one
+                            val foodItems = orderSnapshot.child("foodItems")
+                            // Skip the first one
+                            val foodItemsToDisplay = foodItems.children.toList().drop(1)
+                            for (foodItemSnapshot in foodItemsToDisplay) {
+                                val buyHistoryItem = foodItemSnapshot.getValue(RecentBuyModel::class.java)
+                                buyHistoryItem?.let {
+                                    orderHistoryItems.add(it)
+                                }
+                            }
+                        }
+                    }
+                    listOfItems.addAll(orderHistoryItems)
+                    Log.d("HistoryFragment", "List of items to be shown in RecyclerView $listOfItems")
                 } else {
                     Log.d("HistoryFragment", "No order history found for user.")
-                    // Optionally display a message or placeholder in the UI
                 }
+                Log.d("HistoryFragment", "Updating RecyclerView with ${listOfItems.size} items")
+                buyAgainAdapter.notifyDataSetChanged() // Notify adapter of data change
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -105,21 +121,14 @@ class HistoryFragment : Fragment() {
     }
     private fun setDataInRecentBuyItem(recentOrderItem: RecentBuyModel) {
         binding.recentBuyItemConstraintLayout.visibility = View.VISIBLE
-        with(binding) {
-            RecentFoodName.text = recentOrderItem.name ?: "Not Available" // Use name, handle null
-            RecentItemPrice.text = recentOrderItem.price?.toString() ?: "N/A"  //Use price, handle null
-            // No image to load anymore, replace with a default image or remove the ImageView
-            Glide.with(requireContext()).load(recentOrderItem.image).into(recentImage)?:""
+        binding.apply {
+            RecentFoodName.text = recentOrderItem.name ?: "Not Available"
+            RecentItemPrice.text = recentOrderItem.price?.toString() ?: "N/A"
+            Glide.with(requireContext())
+                .load(recentOrderItem.image)
+                .placeholder(R.drawable.menu1) // Add a default image
+                .error(R.drawable.menu2) // Image to show on error
+                .into(recentImage)
         }
-    }
-
-    private fun setupRecyclerView() {
-        val buyAgainFoodName: List<String> = listOf("Pizza", "Burgers", "sandwich", "momo")
-        val buyAgainFoodPrice: List<String> = listOf("$5", "$6", "$7", "$8")
-        val buyAgainImage = listOf(R.drawable.menu1, R.drawable.menu2, R.drawable.menu3, R.drawable.menu4)
-        buyAgainAdapter = BuyAgainAdapter(buyAgainFoodName, buyAgainFoodPrice, buyAgainImage)
-        binding.buyAgainRecyclerView.adapter = buyAgainAdapter
-
-        binding.buyAgainRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 }
