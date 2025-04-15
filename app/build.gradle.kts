@@ -59,6 +59,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8") // Or the latest version
     implementation("androidx.activity:activity-compose:1.9.0") // Or the latest version
 
+    implementation (libs.glide) // or the latest version
+    annotationProcessor (libs.compiler)
     // AndroidX dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -78,9 +80,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Glide
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
 }

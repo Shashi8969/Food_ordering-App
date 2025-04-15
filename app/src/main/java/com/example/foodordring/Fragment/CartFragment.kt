@@ -1,5 +1,6 @@
 package com.example.foodordring.Fragment
 
+import OrderItem
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +14,6 @@ import com.example.foodordring.PayOutActivity
 import com.example.foodordring.adaptar.CartAdapter
 import com.example.foodordring.databinding.FragmentCartBinding
 import com.example.foodordring.model.CartItems
-import com.example.foodordring.model.OrderItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -76,6 +76,8 @@ class CartFragment : Fragment() {
                     cartItem?.let {
                         // Store the Firebase key as the itemId
                         it.itemId = cartItemSnapshot.key
+                        it.foodImage = cartItemSnapshot.child("foodImage").getValue(String::class.java)
+                        Log.d("FoodImage", "Food Image: ${it.foodImage}")
                         cartItemsList.add(it)
                     }
                 }
@@ -151,11 +153,17 @@ class CartFragment : Fragment() {
         }
 
         val orderItems = cartItemsList.map { item ->
+            val image = item.foodImage
+            Log.d("FoodImage", "Food Image: $image")
+            if(image.isNullOrEmpty()){
+                Log.e("CartFragment", "Food image is null or empty for item: ${item.foodName}")
+            }
             OrderItem(
                 foodName = item.foodName ?: "",
                 foodPrice = (item.foodDiscountPrice?.toDoubleOrNull() ?: item.foodPrice?.toDoubleOrNull()) ?: 0.0,
-                quantity = item.quantity ?: 1
-            )
+                quantity = item.quantity ?: 1,
+                foodImage = image.toString(),
+                            )
         }
 
         val discountedTotalPrice = calculateTotal() - currentDiscount

@@ -1,11 +1,11 @@
 package com.example.foodordring
 
+import OrderItem
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.foodordring.databinding.ActivityPayOutBinding
-import com.example.foodordring.model.OrderItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -127,8 +127,10 @@ class PayOutActivity : AppCompatActivity() {
             "userId" to userId,
             "orderTime" to LocalTime.now(ZoneId.of("Asia/Kolkata")).toString(),
             "orderDate" to dateTime,
+            "timestamp" to System.currentTimeMillis(),
+            "orderId" to orderId,
             "foodItems" to orderItems.map { item ->
-                hashMapOf("name" to item.foodName, "quantity" to item.quantity, "price" to item.foodPrice)
+                hashMapOf("name" to item.foodName, "quantity" to item.quantity, "price" to item.foodPrice,"image" to item.foodImage.toString())
             },
             "totalAmount" to totalAmount,
             "deliveryDetails" to hashMapOf(
