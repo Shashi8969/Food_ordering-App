@@ -67,7 +67,7 @@ class MenuAdapter(
             Log.d("MenuAdapter", "Binding item: ${menuItem.foodName}, isFavorite: ${menuItem.isFavorite}")
             binding.apply {
                 menuFoodName.text = menuItem.foodName
-                updateFavoriteIcon(menuItem.isFavorite)
+                updateFavoriteIconwithdatabase(menuItem.isFavorite)
                 priceCurrent.text = "₹ ${menuItem.foodPrice}"
                 checkPrice(menuItem.foodPrice, menuItem.foodDiscountPrice)
                 foodDescription.text = menuDesc(menuItem.foodDescription)
@@ -84,7 +84,20 @@ class MenuAdapter(
                 }
             }
         }
+        //Retrive favorite status from database
+        private fun updateFavoriteIconwithdatabase(isFavorite: Boolean) {
+            val favRef = database.getReference("users/$userId/favorites/${menuItems[adapterPosition].itemId}")
+            favRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val isFavoriteFromDatabase = snapshot.getValue(Boolean::class.java) ?: false
+                    updateFavoriteIcon(isFavoriteFromDatabase)
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("MenuAdapter", "Error checking favorite status: ${error.message}")
+                }
+            })
+        }
         private fun updateFavoriteIcon(isFavorite: Boolean) {
             val icon = if (isFavorite) R.drawable.faviourate_filled_heart else R.drawable.faviourate_empity
             binding.favoriteButton.setImageResource(icon)
@@ -97,29 +110,21 @@ class MenuAdapter(
                 return
             }
             val favRef = database.getReference("users/$userId/favorites/${menuItem.itemId}")
-            val menuRef = database.getReference("Menu/${menuItem.itemId}") // Assuming your base menu path is "Menu"
-
-            favRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val isCurrentlyFavorite = snapshot.exists()
-                    favRef.setValue(!isCurrentlyFavorite)  // Toggle favorite
-                        .addOnSuccessListener {
-                            menuItem.isFavorite = !isCurrentlyFavorite
-                            updateFavoriteIcon(menuItem.isFavorite)
-                            notifyItemChanged(position)
-                        }
-                        .addOnFailureListener { e ->
-                            Log.e("MenuAdapter", "Error toggling favorite: ${e.message}")
-                            // Handle error (e.g., show a toast)
-                            // Consider reverting UI if needed.
-                        }
+            // NEW APPROACH:  Directly set the new value based on the current UI state.
+            val newValue = !menuItem.isFavorite  // Invert the current UI state
+            favRef.setValue(newValue)
+                .addOnSuccessListener {
+                    // Update UI and local data on successful write.
+                    menuItem.isFavorite = newValue
+                    updateFavoriteIcon(menuItem.isFavorite)
+                    notifyItemChanged(position)
+                    Log.d("MenuAdapter", "Favorite status toggled successfully for ${menuItem.foodName}: $newValue")
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("MenuAdapter", "Error checking existing favorite: ${error.message}")
+                .addOnFailureListener { e ->
+                    Log.e("MenuAdapter", "Error toggling favorite: ${e.message}")
                     // Handle error (e.g., show a toast)
+                    // Consider reverting UI if needed, as the database update failed.
                 }
-            })
         }
 
         private fun checkPrice(current: String?, discounted: String?) {
