@@ -4,6 +4,7 @@ import OrderItem
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.foodordring.databinding.ActivityPayOutBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -63,8 +64,21 @@ class PayOutActivity : AppCompatActivity() {
             address = binding.address.text.toString()
             phone = binding.phone.text.toString()
 
+            if(name.isEmpty()){
+                binding.name.error = "Please enter your name"
+                binding.name.requestFocus()
+            }
+            if(address.isEmpty()){
+                binding.address.error = "Please enter your address"
+                binding.address.requestFocus()
+            }
+            if(phone.isEmpty()){
+                binding.phone.error = "Please enter your phone number"
+                binding.phone.requestFocus()
+            }
             if (name.isNotEmpty() && address.isNotEmpty() && phone.isNotEmpty()) {
                 Log.d("PayOutActivity", "Placing order with items: $orderItems")
+                Toast.makeText(this, "Placing order...", Toast.LENGTH_SHORT).show()
                 createOrderId()
                 bottomSheetFragment.show(
                     supportFragmentManager,
@@ -72,6 +86,7 @@ class PayOutActivity : AppCompatActivity() {
                 )
             } else {
                 Log.w("PayOutActivity", "Please fill in all fields.")
+                Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
                 // You can optionally display a Toast here to inform the user.
             }
         }
