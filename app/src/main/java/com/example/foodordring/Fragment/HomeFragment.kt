@@ -19,6 +19,7 @@ import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.foodordering.adapter.MenuAdapter
 import com.example.foodordring.R
+import com.example.foodordring.StringHandling.getFirstNameWithoutPrefix
 import com.example.foodordring.databinding.FragmentHomeBinding
 import com.example.foodordring.model.MenuItem
 import com.example.foodordring.notification_Bottom_Fragment
@@ -161,7 +162,7 @@ class HomeFragment : Fragment() {
                         val username = snapshot.child("name").getValue(String::class.java) ?: ""
                         val profileImageUrl = snapshot.child("profileImageUrl").getValue(String::class.java)
 
-                        binding.usernameTextView.text = "Welcome, $username"
+                        binding.usernameTextView.text = "Welcome, ${username.getFirstNameWithoutPrefix()}"
 
                         if (profileImageUrl != null) {
                             Glide.with(this@HomeFragment) // Use this@HomeFragment

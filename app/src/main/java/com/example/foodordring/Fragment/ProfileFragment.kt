@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.foodordring.Login
 import com.example.foodordring.R
+import com.example.foodordring.StringHandling.formatName
 import com.example.foodordring.databinding.FragmentProfileBinding
 import com.example.foodordring.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
@@ -175,15 +176,63 @@ class ProfileFragment : Fragment() {
     private fun saveUserData() {
         val userId = auth.currentUser?.uid
         if (userId != null) {
-            val name = binding.profileName.text.toString()
+            val name = binding.profileName.text.toString().formatName()
             val address = binding.profileAddress.text.toString()
             val email = binding.profileEmail.text.toString()
             val phone = binding.profilePhoneNo.text.toString()
 
-            if (name.isBlank() || address.isBlank() || email.isBlank() || phone.isBlank()) {
-                showToast("Please fill in all fields.")
+            if(name.isNullOrEmpty()){
+                binding.profileName.error = "Name cannot be empty"
+                binding.profileName.requestFocus()
                 return
             }
+            if(address.isNullOrEmpty()){
+                binding.profileAddress.error = "Address cannot be empty"
+                binding.profileAddress.requestFocus()
+                return
+            }
+            if(email.isNullOrEmpty()){
+                binding.profileEmail.error = "Email cannot be empty"
+                binding.profileEmail.requestFocus()
+                return
+            }
+            if(phone.isNullOrEmpty()){
+                binding.profilePhoneNo.error = "Phone number cannot be empty"
+                binding.profilePhoneNo.requestFocus()
+                return
+            }
+            if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                binding.profileEmail.error = "Invalid Email"
+                binding.profileEmail.requestFocus()
+                return
+            }
+            if(phone.length != 10){
+                binding.profilePhoneNo.error = "Invalid Phone Number"
+                binding.profilePhoneNo.requestFocus()
+                return
+            }
+            if (!phone.matches("^\\+91[6-9][0-9]{9}$".toRegex()) && !phone.matches("^[6-9][0-9]{9}$".toRegex())) {
+                binding.profilePhoneNo.error = "Invalid Indian Phone Number"
+                binding.profilePhoneNo.requestFocus()
+                return
+            }
+            if(name.length < 3){
+                binding.profileName.error = "Name should be at least 3 characters"
+                binding.profileName.requestFocus()
+                return
+            }
+            if(address.length < 10){
+                binding.profileAddress.error = "Address should be at least 10 characters"
+                binding.profileAddress.requestFocus()
+                return
+            }
+            if(email.length < 10){
+                binding.profileEmail.error = "Email should be at least 10 characters"
+                binding.profileEmail.requestFocus()
+                return
+            }
+
+
 
             val userProfile = UserModel(name, address, email, phone)
             val userReference = database.reference.child("users").child(userId)
