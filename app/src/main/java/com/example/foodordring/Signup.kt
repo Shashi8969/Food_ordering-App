@@ -151,9 +151,8 @@ class Signup : AppCompatActivity() {
         name = binding.etName.text.toString()
         password = binding.etPasswordSignup.text.toString().trim()
         email = binding.etEmailSignup.text.toString().trim()
-
-        val user = UserModel(name,"", email, "", password,"")
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        val user = UserModel(name,"", email, "", password,userId)
         database.child("users").child(userId).setValue(user)
     }
 }
