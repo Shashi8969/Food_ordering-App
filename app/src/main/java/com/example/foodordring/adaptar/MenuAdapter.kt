@@ -1,6 +1,5 @@
 package com.example.foodordering.adapter
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -19,8 +18,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class MenuAdapter(
-    private val menuItems: MutableList<MenuItem>,
-    private val context: Context
+    private val menuItems: MutableList<MenuItem>
 ) : RecyclerView.Adapter<MenuAdapter.MenuViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
@@ -29,6 +27,7 @@ class MenuAdapter(
     }
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
+        Log.d("MenuAdapter", "Binding item at position: $position")  // ADDED LOG
         holder.bind(position)
     }
 
@@ -51,7 +50,7 @@ class MenuAdapter(
 
         private fun openDetailsActivity(position: Int) {
             val menuItem = menuItems[position]
-            val intent = Intent(context, DetailsActivity::class.java).apply {
+            val intent = Intent(itemView.context, DetailsActivity::class.java).apply { // Use itemView.context
                 putExtra("MenuItemName", menuItem.foodName)
                 putExtra("MenuItemImage", menuItem.foodImage)
                 putExtra("MenuItemPrice", menuItem.foodPrice)
@@ -60,7 +59,7 @@ class MenuAdapter(
                 putExtra("MenuItemDiscountPrice", menuItem.foodDiscountPrice)
                 putExtra("itemId", menuItem.itemId)
             }
-            context.startActivity(intent)
+            itemView.context.startActivity(intent) // Use itemView.context
         }
 
         fun bind(position: Int) {
@@ -72,7 +71,7 @@ class MenuAdapter(
                 priceCurrent.text = "₹ ${menuItem.foodPrice}"
                 checkPrice(menuItem.foodPrice, menuItem.foodDiscountPrice)
                 foodDescription.text = menuDesc(menuItem.foodDescription)
-                Glide.with(context).load(Uri.parse(menuItem.foodImage)).into(menuImage)
+                Glide.with(menuImage.context).load(Uri.parse(menuItem.foodImage)).into(menuImage) // Use menuImage.context
                 ratingText.text = menuItem.foodRating?.toString() ?: "0.0"
                 priceDiscounted.text = "₹ ${menuItem.foodDiscountPrice}"
 
@@ -144,9 +143,21 @@ class MenuAdapter(
             description?.takeIf { it.length <= 24 } ?: "${description?.substring(0, 20)}..."
     }
 
-    fun updateData(newItems: List<MenuItem>) {
+    fun updateData(newMenuItems: MutableList<MenuItem>) {
+        Log.d("MenuAdapter", "Updating data with ${newMenuItems.size} items")
         menuItems.clear()
-        menuItems.addAll(newItems)
+        Log.d("MenuAdapter", "menuItems size after clear: ${menuItems.size}") // NEW LOG
+        newMenuItems.forEach { menuItem -> // CHANGED - adding one by one
+            Log.d("MenuAdapter", "Adding item: ${menuItem.foodName}") // NEW LOG
+            menuItems.add(menuItem)
+            Log.d("MenuAdapter", "menuItems size during add: ${menuItems.size}") // NEW LOG
+        }
+        Log.d("MenuAdapter", "menuItems size after addAll (replaced with loop): ${menuItems.size}") // MODIFIED LOG
+        if (menuItems.isNotEmpty()) {
+            Log.d("MenuAdapter", "First item in menuItems: ${menuItems[0].foodName}")
+        }
+        Log.d("MenuAdapter", "menuItems size just before notify: ${menuItems.size}")
         notifyDataSetChanged()
+        Log.d("MenuAdapter", "notifyDataSetChanged() called")
     }
 }

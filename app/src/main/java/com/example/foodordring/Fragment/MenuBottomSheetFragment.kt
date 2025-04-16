@@ -63,7 +63,7 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
             }
 
             private fun setAdapeter() {
-                val adapter = MenuAdapter(menuItems, requireContext())
+                val adapter = MenuAdapter(menuItems)
                 val itemWidthDp = 150 // Desired item width in dp
                 val noOfColumns = calculateNoOfColumns(requireContext(), itemWidthDp)
                 binding.menuRecyclerView.layoutManager =
