@@ -27,4 +27,9 @@
     <string name="email_example">demo@gmail.com</string>
     <string name="phone_example">9876543210</string>
     <string name="edit_profile_image">Edit your image</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="cash_on_delivery">Cash On Delivery</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="place_my_order">Place my order</string>
 </resources>

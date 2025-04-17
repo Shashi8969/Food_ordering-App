@@ -1,234 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorSurface"
+    android:padding="@dimen/grid_2"
     tools:context=".PayOutActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/arrow_left"
+        app:title="@string/edit_profile"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/placeOrderButton"
+        android:paddingBottom="@dimen/grid_2">
 
-    <ImageButton
-        android:id="@+id/backbtn"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="6dp"
-        android:scaleType="centerCrop"
-        android:background="@android:color/transparent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/arrow_left"/>
-
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/yeonsung_regular"
-        android:text="Edit"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
-        android:textColor="@color/text_color"
-        android:textSize="20sp"/>
-
-        <LinearLayout
+        <!-- Name Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameInputLayout"
+            style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/profileedittextshape"
-            android:elevation="2dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/grid_2"
+            android:hint="@string/name">
 
-            <TextView
-                android:layout_width="30dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/yeonsung_regular"
-                android:text="Name"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:autofillHints="name"
-                android:background="@android:color/transparent"
-                android:ems="10"
-                android:fontFamily="@font/lato_regular"
                 android:inputType="textPersonName"
-                android:text="Name"
-                android:textColor="#3b3b3b"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:text="@string/name"
+                android:textAppearance="?attr/textAppearanceBody1" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <!-- Address Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addressInputLayout"
+            style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/profileedittextshape"
-            android:elevation="2dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginTop="@dimen/grid_2"
+            android:hint="@string/address">
 
-            <TextView
-                android:layout_width="30dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addressEditText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/yeonsung_regular"
-                android:text="Address"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:autofillHints="postalAddress"
-                android:background="@android:color/transparent"
-                android:ems="10"
-                android:fontFamily="@font/lato_regular"
+                android:gravity="top"
                 android:inputType="textMultiLine"
-                android:text="Lorem ipsum is placeholder text
-commonly used in the graphic,
-print, and publishing industries
-for previewing layouts and visual "
-                android:textColor="#3b3b3b"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:minLines="3"
+                android:text="@string/lorem_ipsum_short"
+            android:textAppearance="?attr/textAppearanceBody1" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <!-- Phone Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phoneInputLayout"
+            style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profileedittextshape"
-            android:elevation="2dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/grid_2"
+            android:hint="@string/phone">
 
-            <TextView
-                android:layout_width="40dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phoneEditText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/yeonsung_regular"
-                android:text="Phone"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints="phone"
-                android:background="@android:color/transparent"
-                android:ems="10"
-                android:fontFamily="@font/lato_regular"
                 android:inputType="phone"
-                android:text="9876543210"
-                android:textColor="#3b3b3b"
-                android:textSize="12sp" />
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/profileedittextshape"
-        android:elevation="2dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+                android:text="@string/phone_example"
+                android:textAppearance="?attr/textAppearanceBody1" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="161dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/yeonsung_regular"
-            android:text="Payment Method "
-            android:textColor="#3b3b3b"
-            android:textSize="18sp" />
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="8dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/cashondelivery"
-            />
-
-
-    </LinearLayout>
-        <LinearLayout
+        <!-- Payment Method (Display Only) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/paymentMethodLayout"
+            style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profileedittextshape"
-            android:elevation="2dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/grid_2"
+            android:hint="@string/payment_method"
+        app:startIconTint="?attr/colorPrimary">
 
-            <TextView
-                android:layout_width="136dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/yeonsung_regular"
-                android:text="Total Amount"
-                android:textColor="#3b3b3b"
-                android:textSize="18sp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/paymentMethodEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:clickable="false"
+            android:text="@string/cash_on_delivery"
+        android:textAppearance="?attr/textAppearanceBody1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/totalAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:ems="10"
-                android:fontFamily="@font/yeonsung_regular"
-                android:gravity="end"
-                android:inputType="none"
-                android:paddingEnd="32dp"
-                android:text="$5"
-                android:textColor="@color/text_color"
-                android:textSize="20sp" />
-        </LinearLayout>
-        </LinearLayout>
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/placeorderbutton"
+    <!-- Total Amount (Display Only) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/totalAmountLayout"
+        style="?attr/textInputOutlinedStyle"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:textColor="@color/text_color"
-        android:background="@drawable/edittextshape"
-        android:layout_gravity="bottom"
-        android:text="Place my order"
-        android:fontFamily="@font/yeonsung_regular"
-        android:layout_marginBottom="32dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:textAllCaps="false"/>
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/grid_2"
+        android:hint="@string/total_amount"
+        app:prefixText="₹">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/totalAmountEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:clickable="false"
+            android:text="5.00"
+        android:textAppearance="?attr/textAppearanceBody1" />
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/placeOrderButton"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_marginBottom="@dimen/grid_3"
+android:text="@string/place_my_order"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

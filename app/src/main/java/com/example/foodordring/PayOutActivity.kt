@@ -57,36 +57,36 @@ class PayOutActivity : AppCompatActivity() {
         setUserData()
 
         //Calculate total amount and show it in the UI
-        binding.totalAmount.text = "₹%.2f".format(totalAmount)
-        binding.totalAmount.isEnabled = false
+        binding.totalAmountEditText.text = android.text.Editable.Factory.getInstance().newEditable("%.2f".format(totalAmount))
+        binding.totalAmountEditText.isEnabled = false
 
         val bottomSheetFragment = CongratsBottomSheet()
-        binding.placeorderbutton.setOnClickListener {
-            name = binding.name.text.toString()
-            address = binding.address.text.toString()
-            phone = binding.phone.text.toString()
+        binding.placeOrderButton.setOnClickListener {
+            name = binding.nameEditText.text.toString()
+            address = binding.addressEditText.text.toString()
+            phone = binding.phoneEditText.text.toString()
             name.formatName()
             address.formatAddressEnhanced()
 
             if(name.isEmpty()){
-                binding.name.error = "Please enter your name"
-                binding.name.requestFocus()
+                binding.nameEditText.error = "Please enter your name"
+                binding.nameEditText.requestFocus()
             }
             if(address.isEmpty()){
-                binding.address.error = "Please enter your address"
-                binding.address.requestFocus()
+                binding.addressEditText.error = "Please enter your address"
+                binding.addressEditText.requestFocus()
             }
             if(phone.isEmpty()){
-                binding.phone.error = "Please enter your phone number"
-                binding.phone.requestFocus()
+                binding.phoneEditText.error = "Please enter your phone number"
+                binding.phoneEditText.requestFocus()
             }
             if(!android.util.Patterns.EMAIL_ADDRESS.matcher(phone).matches()){
-                binding.phone.error = "Invalid Indian Phone Number"
-                binding.phone.requestFocus()
+                binding.phoneEditText.error = "Invalid Indian Phone Number"
+                binding.phoneEditText.requestFocus()
             }
             if(phone.matches("^\\+91[6-9][0-9]{9}$".toRegex()) || phone.matches("^[6-9][0-9]{9}$".toRegex())) {
-                binding.phone.error = "Invalid Indian Phone Number"
-                binding.phone.requestFocus()
+                binding.phoneEditText.error = "Invalid Indian Phone Number"
+                binding.phoneEditText.requestFocus()
             }
             if(name.isNotEmpty() && address.isNotEmpty() && phone.isNotEmpty()) {
                 Toast.makeText(this, "Placing order...", Toast.LENGTH_SHORT).show()
@@ -103,7 +103,7 @@ class PayOutActivity : AppCompatActivity() {
             }
         }
 
-        binding.backbtn.setOnClickListener {
+        binding.toolbar.setOnClickListener {
             finish()
         }
     }
@@ -125,9 +125,9 @@ class PayOutActivity : AppCompatActivity() {
 
 
                         binding.apply {
-                            name.setText(userName)
-                            address.setText(userAddress)
-                            phone.setText(userPhone)
+                            nameEditText.setText(userName)
+                            addressEditText.setText(userAddress)
+                            phoneEditText.setText(userPhone)
                         }
                     }
                 }
