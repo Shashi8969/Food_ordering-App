@@ -1,14 +1,25 @@
 package com.example.foodordring
 
 import OrderItem
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.foodordring.StringHandling.formatAddressEnhanced
 import com.example.foodordring.StringHandling.formatName
 import com.example.foodordring.databinding.ActivityPayOutBinding
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,6 +29,7 @@ import com.google.firebase.database.ValueEventListener
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
+import java.util.Locale
 
 class PayOutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPayOutBinding
@@ -29,6 +41,22 @@ class PayOutActivity : AppCompatActivity() {
     private var totalAmount: Double = 0.0
     private var orderItems: ArrayList<OrderItem> = ArrayList() // Initialize orderItems
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
+    private val geocoder: Geocoder by lazy { Geocoder(this, Locale.getDefault()) }
+    private val locationPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                if (data != null) {
+                    val address = data.getStringExtra("picked_address")
+                    if (address != null) {
+                        binding.addressEditText.setText(address)
+                    }
+                }
+            }
+        }
     private lateinit var databaseReference: DatabaseReference
     private lateinit var orderId: String
 
@@ -38,6 +66,10 @@ class PayOutActivity : AppCompatActivity() {
         binding = ActivityPayOutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        fusedLocationClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(this)
+        setupLocationIconClickListener()
+        setupPermissions()
+        setupMapIconClickListener()
         //Initialize Firebase Authentication
         databaseReference = FirebaseDatabase.getInstance().getReference()
         auth = FirebaseAuth.getInstance()
@@ -197,4 +229,101 @@ class PayOutActivity : AppCompatActivity() {
         val cartReference = databaseReference.child("users").child(userId).child("CartItems")
         cartReference.removeValue()
     }
-}
+        private fun setupPermissions() {
+            permissionLauncher =
+                registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                    if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                        permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                    ) {
+                        getCurrentLocation()
+                    } else {
+                        Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+
+        private fun setupLocationIconClickListener() {
+            // Use binding to access the TextInputLayout's endIcon
+            binding.addressInputLayout.setEndIconOnClickListener {
+                checkLocationPermissionsAndGetLocation()
+            }
+        }
+
+    // Add this function
+    private fun setupMapIconClickListener() {
+        binding.addressInputLayout.setStartIconOnClickListener {  // Assuming the map icon is the start icon
+            val intent = Intent(this, LocationPickerActivity::class.java) // Replace with your activity
+            locationPickerLauncher.launch(intent)
+        }
+    }
+
+        private fun checkLocationPermissionsAndGetLocation() {
+            if (checkLocationPermission()) {
+                getCurrentLocation()
+            } else {
+                requestLocationPermissions()
+            }
+        }
+
+        private fun requestLocationPermissions() {
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                )
+            )
+        }
+
+        private fun checkLocationPermission(): Boolean {
+            return (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED)
+        }
+
+        @SuppressLint("MissingPermission")
+        private fun getCurrentLocation() {
+            if (!checkLocationPermission()) {
+                requestLocationPermissions()
+                return
+            }
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        getGeocodedAddress(it)
+                    } ?: run {
+                        Toast.makeText(this, "Could not get last known location", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Location", "Error getting location: ${e.message}")
+                    Toast.makeText(this, "Error getting location", Toast.LENGTH_SHORT).show()
+                }
+        }
+
+        private fun getGeocodedAddress(location: Location) {
+            try {
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                if (!addresses.isNullOrEmpty()) {
+                    val address = addresses[0]
+                    val addressText = address.getAddressLine(0)
+                    runOnUiThread {
+                        // Use binding to access the EditText
+                        binding.addressEditText.setText(addressText)
+                    }
+                } else {
+                    runOnUiThread {
+                        binding.addressEditText.setText("No address found for this location")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("Geocoding", "Geocoding error: ${e.message}")
+                runOnUiThread {
+                    binding.addressEditText.setText("Geocoding error")
+                }
+            }
+        }
+    }

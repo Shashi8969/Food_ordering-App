@@ -48,10 +48,11 @@ class ProfileFragment : Fragment() {
         val view = binding.root
 
         storage = FirebaseStorage.getInstance().reference.child("profile_images")
-
+        binding.editImageButton.elevation = 0f
         binding.editImageButton.setOnClickListener {  //Changed this line
             chooseImage()
         }
+
 
         binding.saveInfoButton.setOnClickListener {
             saveUserData()

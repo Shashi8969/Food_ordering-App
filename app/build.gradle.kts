@@ -57,8 +57,10 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8") // Or the latest version
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.8") // Or the latest version
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8") // Or the latest version
-    implementation("androidx.activity:activity-compose:1.9.0") // Or the latest version
-
+    implementation("androidx.activity:activity-compose:1.10.1") // Or the latest version
+    implementation(libs.play.services.location) // Or the latest version
+    implementation("com.google.android.gms:play-services-maps:19.0.0") // or the latest version
+    implementation("com.google.android.material:material:1.12.0") // Ensure Material Components are included
     implementation (libs.glide) // or the latest version
     annotationProcessor (libs.compiler)
     // AndroidX dependencies

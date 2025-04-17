@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:navigationIcon="@drawable/arrow_left"
-        app:title="@string/edit_profile"
+        app:title="@string/payout_details"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
@@ -31,6 +31,7 @@
             style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:startIconDrawable="@drawable/user"
             android:layout_marginTop="@dimen/grid_2"
             android:hint="@string/name">
 
@@ -49,8 +50,12 @@
             style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:endIconDrawable="@drawable/ladd"
+            app:startIconDrawable="@drawable/home"
+            android:hint="@string/address"
+        app:endIconMode="custom"
             android:layout_marginTop="@dimen/grid_2"
-            android:hint="@string/address">
+        app:endIconTint="?attr/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addressEditText"
@@ -70,6 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/grid_2"
+            app:startIconDrawable="@drawable/add_call"
             android:hint="@string/phone">
 
             <com.google.android.material.textfield.TextInputEditText
