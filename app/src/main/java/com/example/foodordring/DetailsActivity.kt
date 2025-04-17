@@ -32,7 +32,7 @@ class DetailsActivity : AppCompatActivity() {
         //accept all the extra intent
         receiveData()
 
-        binding.imageButton.setOnClickListener {
+        binding.toolbar.setOnClickListener {
             finish()
         }
         binding.addToCart.setOnClickListener {

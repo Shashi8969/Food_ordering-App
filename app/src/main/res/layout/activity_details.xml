@@ -5,116 +5,120 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/grid_2"
     tools:context=".DetailsActivity">
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:padding="10dp"
-        android:background="@android:color/transparent"
-        android:scaleType = "centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/arrow_left" />
-
-    <TextView
-        android:id="@+id/detailsFoodName"
+    <!-- Back Button -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/arrow_left"
+        app:navigationIconTint="?attr/colorPrimary" />
+
+    <!-- Food Name -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/detailsFoodName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/grid_1"
         android:fontFamily="@font/yeonsung_regular"
+        android:gravity="center_horizontal"
         android:text="Food Name"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textAppearance="?attr/textAppearanceHeadline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <androidx.cardview.widget.CardView
+    <!-- Food Image (using Material Card) -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView4"
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/grid_1"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="@dimen/card_elevation"
+        app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailsFoodName">
 
         <ImageView
             android:id="@+id/detailFoodImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/menu5" />
+            app:srcCompat="@drawable/menu5"
+            android:contentDescription="@string/food_image_description" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <TextView
+    <!-- Short Description Header -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView22"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/grid_2"
         android:fontFamily="@font/yeonsung_regular"
-        android:text="Short Descripton"
-        android:textColor="@color/black"
+        android:text="Short Description"
         android:textSize="20sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView4" />
 
-    <TextView
+    <!-- Short Description Text -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/detailsDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="TextView TextViewTextView TextViewTextView TextViewTextView TextViewTextView TextViewTextView TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView22"
-        app:layout_constraintTop_toBottomOf="@+id/textView22" />
+        android:layout_marginTop="@dimen/grid_1"
+        android:text="@string/lorem_ipsum_short"
+    android:textAppearance="?attr/textAppearanceBody1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
-    <TextView
+    <!-- Ingredients Header -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView24"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/grid_2"
         android:fontFamily="@font/yeonsung_regular"
         android:text="Ingredients"
-        android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/detailsDescription"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/detailsDescription"
-        app:layout_constraintTop_toBottomOf="@+id/detailsDescription" />
-
-    <TextView
-        android:id="@+id/detailsIngredients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/textView24"
-        app:layout_constraintTop_toBottomOf="@+id/textView24" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/addToCart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/addtocartshape"
-        android:elevation="5dp"
-        android:fontFamily="@font/yeonsung_regular"
-        android:text="Add To Cart"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-
-        android:textSize="20sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsIngredients" />
+        app:layout_constraintTop_toBottomOf="@+id/detailsDescription" />
+
+    <!-- Ingredients Text (Consider RecyclerView for List) -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/detailsIngredients"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/grid_1"
+        android:text="TextView"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+    <!-- Add to Cart Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addToCart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorPrimary"
+        android:fontFamily="@font/yeonsung_regular"
+        android:layout_margin="@dimen/card_margin"
+        android:text="Add To Cart"
+        android:textAllCaps="false"
+        android:textAppearance="?attr/textAppearanceButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

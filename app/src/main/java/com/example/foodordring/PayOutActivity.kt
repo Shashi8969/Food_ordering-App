@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.foodordring.StringHandling.formatAddressEnhanced
+import com.example.foodordring.StringHandling.formatName
 import com.example.foodordring.databinding.ActivityPayOutBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -63,6 +65,8 @@ class PayOutActivity : AppCompatActivity() {
             name = binding.name.text.toString()
             address = binding.address.text.toString()
             phone = binding.phone.text.toString()
+            name.formatName()
+            address.formatAddressEnhanced()
 
             if(name.isEmpty()){
                 binding.name.error = "Please enter your name"
@@ -76,15 +80,23 @@ class PayOutActivity : AppCompatActivity() {
                 binding.phone.error = "Please enter your phone number"
                 binding.phone.requestFocus()
             }
-            if (name.isNotEmpty() && address.isNotEmpty() && phone.isNotEmpty()) {
-                Log.d("PayOutActivity", "Placing order with items: $orderItems")
+            if(!android.util.Patterns.EMAIL_ADDRESS.matcher(phone).matches()){
+                binding.phone.error = "Invalid Indian Phone Number"
+                binding.phone.requestFocus()
+            }
+            if(phone.matches("^\\+91[6-9][0-9]{9}$".toRegex()) || phone.matches("^[6-9][0-9]{9}$".toRegex())) {
+                binding.phone.error = "Invalid Indian Phone Number"
+                binding.phone.requestFocus()
+            }
+            if(name.isNotEmpty() && address.isNotEmpty() && phone.isNotEmpty()) {
                 Toast.makeText(this, "Placing order...", Toast.LENGTH_SHORT).show()
                 createOrderId()
                 bottomSheetFragment.show(
                     supportFragmentManager,
                     "Test"
                 )
-            } else {
+            }
+            else {
                 Log.w("PayOutActivity", "Please fill in all fields.")
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
                 // You can optionally display a Toast here to inform the user.

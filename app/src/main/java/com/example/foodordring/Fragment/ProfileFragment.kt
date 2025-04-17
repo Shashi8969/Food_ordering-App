@@ -49,11 +49,11 @@ class ProfileFragment : Fragment() {
 
         storage = FirebaseStorage.getInstance().reference.child("profile_images")
 
-        binding.imageButton2.setOnClickListener {  //Changed this line
+        binding.editImageButton.setOnClickListener {  //Changed this line
             chooseImage()
         }
 
-        binding.saveInfo.setOnClickListener {
+        binding.saveInfoButton.setOnClickListener {
             saveUserData()
         }
         binding.logoutButton.setOnClickListener {

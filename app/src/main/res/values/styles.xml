@@ -23,6 +23,15 @@
         <item name="android:scaleType">centerCrop</item>
         <!-- Add other attributes as needed -->
     </style>
+    <style name="TextAppearance.MyApp.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/yeonsung_regular</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/yeonsung_regular</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
     <style name="RatingBarTheme" parent="Widget.AppCompat.RatingBar.Small">
         <item name="colorControlNormal">@color/rating_star_empty</item>  <!-- Color for empty stars -->
         <item name="colorControlActivated">@color/rating_star_filled</item>  <!-- Color for filled stars -->
@@ -47,4 +56,9 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/price_current_color</item>
     </style>
+    <style name="ShapeAppearance.App.CircleImageView" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSize">50%</item>
+</style>
+
 </resources>

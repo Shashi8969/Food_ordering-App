@@ -17,4 +17,14 @@
     <string name="search_hint">What do you want to order</string>
     <string name="food_image_description">Description of the food</string>
     <string name="add_to_cart">Add to Cart</string>
+    <string name="lorem_ipsum_short">this is short descriptions\nfor multi line\nsupport</string>
+    <string name="name">Name</string>
+    <string name="address">Address</string>
+    <string name="email">Email Id</string>
+    <string name="phone">Phone No.</string>
+    <string name="save_information">Save Information</string>
+    <string name="logout">Logout</string>
+    <string name="email_example">demo@gmail.com</string>
+    <string name="phone_example">9876543210</string>
+    <string name="edit_profile_image">Edit your image</string>
 </resources>
