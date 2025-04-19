@@ -15,11 +15,10 @@
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-                android:fontFamily="@font/yeonsung_regular"
-        android:text=""
-           android:textColor="@color/black"
+        android:fontFamily="@font/yeonsung_regular"
+        android:textColor="@color/black"
         android:textSize="1sp"
-        />
+        tools:ignore="MissingConstraints" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"

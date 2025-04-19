@@ -52,6 +52,9 @@ class HomeFragment : Fragment() {
             val bottomSheetDialog = MenuBottomSheetFragment()
             bottomSheetDialog.show(parentFragmentManager, "Test")
         }
+        binding.userProfilePicture.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+        }
         //Notification Button Click Listener
         binding.notificationButton.setOnClickListener {
             val bottomSheet = notification_Bottom_Fragment()
