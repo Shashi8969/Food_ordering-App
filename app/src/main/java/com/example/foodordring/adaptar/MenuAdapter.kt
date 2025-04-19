@@ -1,10 +1,11 @@
-package com.example.foodordering.adapter
+package com.example.foodordring.adaptar
 
 import android.content.Intent
-import android.net.Uri
+import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.foodordring.DetailsActivity
@@ -12,13 +13,10 @@ import com.example.foodordring.R
 import com.example.foodordring.databinding.MenuItemBinding
 import com.example.foodordring.model.MenuItem
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class MenuAdapter(
-    private val menuItems: MutableList<MenuItem>
+    private val menuItems: MutableList<MenuItem> = mutableListOf()
 ) : RecyclerView.Adapter<MenuAdapter.MenuViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
@@ -27,7 +25,6 @@ class MenuAdapter(
     }
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
-        Log.d("MenuAdapter", "Binding item at position: $position")  // ADDED LOG
         holder.bind(position)
     }
 
@@ -50,28 +47,27 @@ class MenuAdapter(
 
         private fun openDetailsActivity(position: Int) {
             val menuItem = menuItems[position]
-            val intent = Intent(itemView.context, DetailsActivity::class.java).apply { // Use itemView.context
+            val intent = Intent(itemView.context, DetailsActivity::class.java).apply {
                 putExtra("MenuItemName", menuItem.foodName)
-                putExtra("MenuItemImage", menuItem.foodImage)
+                putExtra("MenuItemMenuItemImage", menuItem.foodImage)
                 putExtra("MenuItemPrice", menuItem.foodPrice)
                 putExtra("MenuItemDescription", menuItem.foodDescription)
                 putExtra("MenuItemIngredient", menuItem.foodIngredients)
                 putExtra("MenuItemDiscountPrice", menuItem.foodDiscountPrice)
                 putExtra("itemId", menuItem.itemId)
             }
-            itemView.context.startActivity(intent) // Use itemView.context
+            itemView.context.startActivity(intent)
         }
 
         fun bind(position: Int) {
             val menuItem = menuItems[position]
-            Log.d("MenuAdapter", "Binding item: ${menuItem.foodName}, isFavorite: ${menuItem.isFavorite}")
             binding.apply {
                 menuFoodName.text = menuItem.foodName
-                updateFavoriteIconwithdatabase(menuItem.isFavorite)
+                updateFavoriteIcon(menuItem.isFavorite)
                 priceCurrent.text = "₹ ${menuItem.foodPrice}"
                 checkPrice(menuItem.foodPrice, menuItem.foodDiscountPrice)
                 foodDescription.text = menuDesc(menuItem.foodDescription)
-                Glide.with(menuImage.context).load(Uri.parse(menuItem.foodImage)).into(menuImage) // Use menuImage.context
+                Glide.with(itemView.context).load(menuItem.foodImage).into(menuImage)
                 ratingText.text = menuItem.foodRating?.toString() ?: "0.0"
                 priceDiscounted.text = "₹ ${menuItem.foodDiscountPrice}"
 
@@ -84,20 +80,7 @@ class MenuAdapter(
                 }
             }
         }
-        //Retrive favorite status from database
-        private fun updateFavoriteIconwithdatabase(isFavorite: Boolean) {
-            val favRef = database.getReference("users/$userId/favorites/${menuItems[adapterPosition].itemId}")
-            favRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val isFavoriteFromDatabase = snapshot.getValue(Boolean::class.java) ?: false
-                    updateFavoriteIcon(isFavoriteFromDatabase)
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("MenuAdapter", "Error checking favorite status: ${error.message}")
-                }
-            })
-        }
         private fun updateFavoriteIcon(isFavorite: Boolean) {
             val icon = if (isFavorite) R.drawable.faviourate_filled_heart else R.drawable.faviourate_empity
             binding.favoriteButton.setImageResource(icon)
@@ -110,15 +93,12 @@ class MenuAdapter(
                 return
             }
             val favRef = database.getReference("users/$userId/favorites/${menuItem.itemId}")
-            // NEW APPROACH:  Directly set the new value based on the current UI state.
             val newValue = !menuItem.isFavorite  // Invert the current UI state
             favRef.setValue(newValue)
                 .addOnSuccessListener {
-                    // Update UI and local data on successful write.
                     menuItem.isFavorite = newValue
                     updateFavoriteIcon(menuItem.isFavorite)
                     notifyItemChanged(position)
-                    Log.d("MenuAdapter", "Favorite status toggled successfully for ${menuItem.foodName}: $newValue")
                 }
                 .addOnFailureListener { e ->
                     Log.e("MenuAdapter", "Error toggling favorite: ${e.message}")
@@ -136,11 +116,15 @@ class MenuAdapter(
                         ViewGroup.GONE
                 priceCurrent.paintFlags =
                     if (priceDiscounted.visibility == ViewGroup.VISIBLE)
-                        android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+                        Paint.STRIKE_THRU_TEXT_FLAG
                     else
                         0
                 priceCurrent.visibility = if (current != null) ViewGroup.VISIBLE else ViewGroup.GONE
-                priceDiscounted.visibility = if (discounted != null && priceDiscounted.visibility == ViewGroup.VISIBLE) ViewGroup.VISIBLE else ViewGroup.GONE
+                priceDiscounted.visibility =
+                    if (discounted != null && priceDiscounted.visibility == ViewGroup.VISIBLE)
+                        ViewGroup.VISIBLE
+                    else
+                        ViewGroup.GONE
             }
         }
 
@@ -148,21 +132,26 @@ class MenuAdapter(
             description?.takeIf { it.length <= 24 } ?: "${description?.substring(0, 20)}..."
     }
 
-    fun updateData(newMenuItems: MutableList<MenuItem>) {
-        Log.d("MenuAdapter", "Updating data with ${newMenuItems.size} items")
+    fun updateData(newMenuItems: List<MenuItem>) {
+        val diffResult = DiffUtil.calculateDiff(MenuItemDiffCallback(menuItems, newMenuItems))
         menuItems.clear()
-        Log.d("MenuAdapter", "menuItems size after clear: ${menuItems.size}") // NEW LOG
-        newMenuItems.forEach { menuItem -> // CHANGED - adding one by one
-            Log.d("MenuAdapter", "Adding item: ${menuItem.foodName}") // NEW LOG
-            menuItems.add(menuItem)
-            Log.d("MenuAdapter", "menuItems size during add: ${menuItems.size}") // NEW LOG
+        menuItems.addAll(newMenuItems)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    class MenuItemDiffCallback(
+        private val oldList: List<MenuItem>,
+        private val newList: List<MenuItem>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].itemId == newList[newItemPosition].itemId
         }
-        Log.d("MenuAdapter", "menuItems size after addAll (replaced with loop): ${menuItems.size}") // MODIFIED LOG
-        if (menuItems.isNotEmpty()) {
-            Log.d("MenuAdapter", "First item in menuItems: ${menuItems[0].foodName}")
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
-        Log.d("MenuAdapter", "menuItems size just before notify: ${menuItems.size}")
-        notifyDataSetChanged()
-        Log.d("MenuAdapter", "notifyDataSetChanged() called")
     }
 }

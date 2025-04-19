@@ -41,6 +41,7 @@ class PayOutActivity : AppCompatActivity() {
     private var totalAmount: Double = 0.0
     private var orderItems: ArrayList<OrderItem> = ArrayList() // Initialize orderItems
 
+
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
@@ -65,6 +66,7 @@ class PayOutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPayOutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         fusedLocationClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(this)
         setupLocationIconClickListener()

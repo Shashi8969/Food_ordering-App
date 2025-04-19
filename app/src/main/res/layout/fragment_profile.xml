@@ -47,6 +47,9 @@ android:layout_height="wrap_content"
 android:layout_marginTop="@dimen/grid_3"
 android:hint="@string/name"
 app:layout_constraintEnd_toEndOf="parent"
+        app:endIconMode="custom"
+        app:startIconDrawable="@drawable/user"
+        app:endIconDrawable="@drawable/edit"
 app:layout_constraintStart_toStartOf="parent"
 app:layout_constraintTop_toBottomOf="@+id/userImage">
 
@@ -69,6 +72,9 @@ android:layout_marginTop="@dimen/grid_2"
 android:hint="@string/address"
 app:layout_constraintEnd_toEndOf="parent"
 app:layout_constraintStart_toStartOf="parent"
+    app:startIconDrawable="@drawable/choose_location"
+    app:endIconDrawable="@drawable/edit"
+    app:endIconMode="custom"
 app:layout_constraintTop_toBottomOf="@+id/nameInputLayout">
 
 <com.google.android.material.textfield.TextInputEditText
@@ -90,6 +96,9 @@ android:layout_width="0dp"
 android:layout_height="wrap_content"
 android:layout_marginTop="@dimen/grid_2"
 android:hint="@string/email"
+    app:endIconMode="custom"
+    app:startIconDrawable="@drawable/mail"
+    app:endIconDrawable="@drawable/edit"
 app:layout_constraintEnd_toEndOf="parent"
 app:layout_constraintStart_toStartOf="parent"
 app:layout_constraintTop_toBottomOf="@+id/addressInputLayout">
@@ -107,6 +116,8 @@ app:layout_constraintTop_toBottomOf="@+id/addressInputLayout">
 <com.google.android.material.textfield.TextInputLayout
 android:id="@+id/phoneInputLayout"
 style="?attr/textInputOutlinedStyle"
+    app:endIconMode="custom"
+    app:endIconDrawable="@drawable/edit"
 android:layout_width="0dp"
 android:layout_height="wrap_content"
 android:layout_marginTop="@dimen/grid_2"

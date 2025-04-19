@@ -47,6 +47,8 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        disableEditText()
+
         storage = FirebaseStorage.getInstance().reference.child("profile_images")
         binding.editImageButton.elevation = 0f
         binding.editImageButton.setOnClickListener {  //Changed this line
@@ -63,10 +65,32 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), Login::class.java))
             requireActivity().finish()
         }
-
+        binding.nameInputLayout.setEndIconOnClickListener {
+            binding.profileName.isEnabled = !binding.profileName.isEnabled
+            binding.profileName.requestFocus()
+        }
+        binding.addressInputLayout.setEndIconOnClickListener {
+            binding.profileAddress.isEnabled = !binding.profileAddress.isEnabled
+            binding.profileAddress.requestFocus()
+        }
+        binding.emailInputLayout.setEndIconOnClickListener {
+            binding.profileEmail.isEnabled = !binding.profileEmail.isEnabled
+            binding.profileEmail.requestFocus()
+        }
+        binding.phoneInputLayout.setEndIconOnClickListener {
+            binding.profilePhoneNo.isEnabled = !binding.profilePhoneNo.isEnabled
+            binding.profilePhoneNo.requestFocus()
+        }
         loadUserData()
 
         return view
+    }
+    //Disable all editText by default
+    private fun disableEditText() {
+        binding.profileName.isEnabled = false
+        binding.profileAddress.isEnabled = false
+        binding.profileEmail.isEnabled = false
+        binding.profilePhoneNo.isEnabled = false
     }
 
     private fun chooseImage() {

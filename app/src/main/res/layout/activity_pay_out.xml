@@ -90,23 +90,22 @@
         <!-- Payment Method (Display Only) -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/paymentMethodLayout"
-            style="?attr/textInputOutlinedStyle"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/grid_2"
             android:hint="@string/payment_method"
+            app:startIconDrawable="@drawable/dollar"
         app:startIconTint="?attr/colorPrimary">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <AutoCompleteTextView
             android:id="@+id/paymentMethodEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:clickable="false"
-            android:text="@string/cash_on_delivery"
+            android:inputType="none"
+        android:text="@string/cash_on_delivery"
         android:textAppearance="?attr/textAppearanceBody1" />
     </com.google.android.material.textfield.TextInputLayout>
-
     <!-- Total Amount (Display Only) -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/totalAmountLayout"

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.foodordering.adapter.MenuAdapter
+import com.example.foodordring.adaptar.MenuAdapter
 import com.example.foodordring.databinding.FragmentMenuBottomSheetBinding
 import com.example.foodordring.model.MenuItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
