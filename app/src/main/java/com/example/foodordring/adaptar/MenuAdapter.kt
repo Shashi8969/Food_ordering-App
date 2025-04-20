@@ -13,7 +13,10 @@ import com.example.foodordring.R
 import com.example.foodordring.databinding.MenuItemBinding
 import com.example.foodordring.model.MenuItem
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MenuAdapter(
     private val menuItems: MutableList<MenuItem> = mutableListOf()
@@ -49,7 +52,7 @@ class MenuAdapter(
             val menuItem = menuItems[position]
             val intent = Intent(itemView.context, DetailsActivity::class.java).apply {
                 putExtra("MenuItemName", menuItem.foodName)
-                putExtra("MenuItemMenuItemImage", menuItem.foodImage)
+                putExtra("MenuItemImage", menuItem.foodImage)
                 putExtra("MenuItemPrice", menuItem.foodPrice)
                 putExtra("MenuItemDescription", menuItem.foodDescription)
                 putExtra("MenuItemIngredient", menuItem.foodIngredients)
@@ -63,7 +66,7 @@ class MenuAdapter(
             val menuItem = menuItems[position]
             binding.apply {
                 menuFoodName.text = menuItem.foodName
-                updateFavoriteIcon(menuItem.isFavorite)
+                updateFavoriteIconwithdatabase(menuItem.isFavorite)
                 priceCurrent.text = "₹ ${menuItem.foodPrice}"
                 checkPrice(menuItem.foodPrice, menuItem.foodDiscountPrice)
                 foodDescription.text = menuDesc(menuItem.foodDescription)
@@ -80,7 +83,20 @@ class MenuAdapter(
                 }
             }
         }
+        //Retrive favorite status from database
+        private fun updateFavoriteIconwithdatabase(isFavorite: Boolean) {
+            val favRef = database.getReference("users/$userId/favorites/${menuItems[adapterPosition].itemId}")
+            favRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val isFavoriteFromDatabase = snapshot.getValue(Boolean::class.java) ?: false
+                    updateFavoriteIcon(isFavoriteFromDatabase)
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("MenuAdapter", "Error checking favorite status: ${error.message}")
+                }
+            })
+        }
         private fun updateFavoriteIcon(isFavorite: Boolean) {
             val icon = if (isFavorite) R.drawable.faviourate_filled_heart else R.drawable.faviourate_empity
             binding.favoriteButton.setImageResource(icon)
