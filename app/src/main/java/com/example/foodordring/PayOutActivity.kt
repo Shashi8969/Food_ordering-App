@@ -1,6 +1,6 @@
 package com.example.foodordring
 
-import OrderItem
+import com.example.foodordring.model.OrderItem
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity

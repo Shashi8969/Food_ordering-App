@@ -1,6 +1,6 @@
 package com.example.foodordring.Fragment
 
-import OrderItem
+import com.example.foodordring.model.OrderItem
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
