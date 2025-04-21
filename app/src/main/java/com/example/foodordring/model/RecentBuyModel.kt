@@ -6,4 +6,5 @@ data class RecentBuyModel(
     val quantity: Int = 0,
     val foodId: String? = null,
     val image: String? = null,
+    val totalAmount: Double = 0.0
 )

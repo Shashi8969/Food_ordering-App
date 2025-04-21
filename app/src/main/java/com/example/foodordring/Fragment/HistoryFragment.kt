@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.foodordring.R
+import com.example.foodordring.RecentBuy
 import com.example.foodordring.adaptar.BuyAgainAdapter
 import com.example.foodordring.databinding.FragmentHistoryBinding
 import com.example.foodordring.model.RecentBuyModel
@@ -34,11 +35,15 @@ class HistoryFragment : Fragment() {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
         database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
+        binding.recentBuyItemConstraintLayout.setOnClickListener {
+            RecentBuy.start(requireContext()) //Corrected launch
+        }
 
         setupRecyclerView() // Initialize RecyclerView *before* fetching data
         retrieveOrderHistory()
         return binding.root
     }
+
 
     private fun setupRecyclerView() {
         buyAgainAdapter = BuyAgainAdapter(listOfItems) // Initialize with an empty list
@@ -58,58 +63,66 @@ class HistoryFragment : Fragment() {
         }
 
         val buyItemReference = database.reference.child("users").child(userId).child("orderHistory")
-        buyItemReference.orderByChild("timestamp").addListenerForSingleValueEvent(object : ValueEventListener {
+        buyItemReference.orderByChild("timestamp").addListenerForSingleValueEvent(object :
+            ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val orderHistoryItems = mutableListOf<RecentBuyModel>()
                 var mostRecentItem: RecentBuyModel? = null
 
                 if (snapshot.hasChildren()) {
-                    // Since we ordered by timestamp, the last child is the most recent
-                    val mostRecentOrderSnapshot = snapshot.children.last()
+                    val orders = snapshot.children.toList()  //Get all orders into a list
 
-                    if (mostRecentOrderSnapshot.hasChild("foodItems")) {
-                        val foodItemsSnapshot = mostRecentOrderSnapshot.child("foodItems")
-                        //Assumes foodItems is a List. Adapt if it is a map!
-                        if(foodItemsSnapshot.hasChildren()){
-                            val firstFoodItemSnapshot = foodItemsSnapshot.children.first()
-                            mostRecentItem = firstFoodItemSnapshot.getValue(RecentBuyModel::class.java)
-                        }
+                    // Check if there are at least two orders
+                    if (orders.size >= 2) {
 
-                        if (mostRecentItem != null) {
-                            setDataInRecentBuyItem(mostRecentItem!!)
-                        }
-                    }
-                    // Collect all food items EXCEPT the most recent one for the RecyclerView.
-                    for (orderSnapshot in snapshot.children) {
-                        if (orderSnapshot.key != mostRecentOrderSnapshot.key) {
-                            if (orderSnapshot.hasChild("foodItems")) {
-                                val foodItems = orderSnapshot.child("foodItems")
-                                for (foodItemSnapshot in foodItems.children) {
-                                    val buyHistoryItem = foodItemSnapshot.getValue(RecentBuyModel::class.java)
-                                    buyHistoryItem?.let {
-                                        orderHistoryItems.add(it)
-                                    }
-                                }
+                        // Since we ordered by timestamp, the last child is the most recent
+                        val mostRecentOrderSnapshot = orders.last()
+
+
+                        if (mostRecentOrderSnapshot.hasChild("foodItems")) {
+                            val foodItemsSnapshot = mostRecentOrderSnapshot.child("foodItems")
+                            //Assumes foodItems is a List. Adapt if it is a map!
+                            if (foodItemsSnapshot.hasChildren()) {
+                                val firstFoodItemSnapshot = foodItemsSnapshot.children.first()
+                                mostRecentItem =
+                                    firstFoodItemSnapshot.getValue(RecentBuyModel::class.java)
+                            }
+
+                            if (mostRecentItem != null) {
+                                setDataInRecentBuyItem(mostRecentItem!!)
                             }
                         }
-                        else { //For the most recent order. Get all except the first one
-                            val foodItems = orderSnapshot.child("foodItems")
-                            // Skip the first one
-                            val foodItemsToDisplay = foodItems.children.toList().drop(1)
-                            for (foodItemSnapshot in foodItemsToDisplay) {
-                                val buyHistoryItem = foodItemSnapshot.getValue(RecentBuyModel::class.java)
-                                buyHistoryItem?.let {
-                                    orderHistoryItems.add(it)
-                                }
+
+                        // Iterate through orders starting from the second order (index 1)
+                        for (i in 1 until orders.size) {
+                            val orderSnapshot = orders[i]
+                            if (orderSnapshot.key != mostRecentOrderSnapshot.key) {
+                                // For orders other than the most recent, add all items.
+                                addFoodItemsToHistory(orderSnapshot, orderHistoryItems)
+                            } else {
+                                //For the most recent order. Get all except the first one (mostRecentItem)
+                                addFoodItemsToHistory(
+                                    orderSnapshot,
+                                    orderHistoryItems,
+                                    skipFirst = true
+                                )
                             }
                         }
+                    } else {
+                        Log.d("HistoryFragment", "Less than two orders found. Skipping 'Buy Again' items.")
                     }
                     listOfItems.addAll(orderHistoryItems)
-                    Log.d("HistoryFragment", "List of items to be shown in RecyclerView $listOfItems")
+                    Log.d(
+                        "HistoryFragment",
+                        "List of items to be shown in RecyclerView $listOfItems"
+                    )
                 } else {
                     Log.d("HistoryFragment", "No order history found for user.")
                 }
-                Log.d("HistoryFragment", "Updating RecyclerView with ${listOfItems.size} items")
+                Log.d(
+                    "HistoryFragment",
+                    "Updating RecyclerView with ${listOfItems.size} items"
+                )
                 buyAgainAdapter.notifyDataSetChanged() // Notify adapter of data change
 
             }
@@ -119,6 +132,29 @@ class HistoryFragment : Fragment() {
             }
         })
     }
+
+    private fun addFoodItemsToHistory(
+        orderSnapshot: DataSnapshot,
+        orderHistoryItems: MutableList<RecentBuyModel>,
+        skipFirst: Boolean = false
+    ) {
+        if (orderSnapshot.hasChild("foodItems")) {
+            val foodItems = orderSnapshot.child("foodItems")
+            val foodItemsToProcess = if (skipFirst) {
+                foodItems.children.drop(1) // Skip the first item
+            } else {
+                foodItems.children.toList() // Process all items
+            }
+            for (foodItemSnapshot in foodItemsToProcess) {
+                val buyHistoryItem =
+                    foodItemSnapshot.getValue(RecentBuyModel::class.java)
+                buyHistoryItem?.let {
+                    orderHistoryItems.add(it)
+                }
+            }
+        }
+    }
+
     private fun setDataInRecentBuyItem(recentOrderItem: RecentBuyModel) {
         binding.recentBuyItemConstraintLayout.visibility = View.VISIBLE
         binding.apply {

@@ -17,11 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodOrdring"
         tools:targetApi="31">
+        <activity
+            android:name=".RecentBuy"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBlBm86pXCGygBtRbAXDoWERh84UYzwsWQ" />
-        <activity android:name=".LocationPickerActivity"
-            android:exported="false"/>
+
+        <activity
+            android:name=".LocationPickerActivity"
+            android:exported="false" />
         <activity
             android:name=".DetailsActivity"
             android:exported="false" />

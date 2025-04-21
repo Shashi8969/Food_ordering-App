@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+
     implementation(platform("com.google.firebase:firebase-bom:32.7.0")) // Use the latest version
 
     // Firebase Authentication KTX
